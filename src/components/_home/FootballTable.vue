@@ -1,0 +1,45 @@
+<template>
+    <v-container>
+    <div class="display-1">Football</div>
+    <v-divider class="my-3"></v-divider>
+    <v-data-table
+      :headers="fields"
+      :items="events"
+      class="elevation-1"
+    >
+      <template v-slot:items="props">
+        <tr v-on:click="goTo('/event',props.item.id)">
+          <td v-for="field in fields" :key="field.value">
+            <v-layout justify-center class="text-truncate">
+              {{ props.item[field.value] }}
+            </v-layout>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
+  </v-container>
+</template>
+
+<script>
+export default {
+    props: {
+        events:{type: Array}
+    },
+    data () {
+    return { 
+      fields: [
+        { value: 'homeTeam', text: 'Home Team', sortable: true, align: 'center', width: '35%' },
+        { value: 'homeOdd', text: 'Odd', sortable: true, align: 'center', width: '10%' },
+        { value: 'tie', text: 'Tie', sortable: true, align: 'center', width: '10%' },
+        { value: 'awayOdd', text: 'Odd', sortable: true, align: 'center', width: '10%' },
+        { value: 'awayTeam', text: 'Away Team', sortable: true, align: 'center', width: '35%' }
+      ]
+    }
+  },
+  methods:{
+    goTo: function(path, id){
+      this.$router.push(path + '/' + id)
+    }
+  }
+}
+</script>

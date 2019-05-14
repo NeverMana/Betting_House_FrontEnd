@@ -73,7 +73,8 @@
             <v-toolbar-title>
                 <span>
                     <v-btn @click="goTo('/')" flat>
-                    Betting House
+                        <v-icon dark left> mdi-home </v-icon>
+                        Betting House
                     </v-btn>
                 </span>
             </v-toolbar-title>
@@ -100,10 +101,15 @@ export default {
         return {
             drawer: false, // this.$vuetify.breakpoint.lgAndUp,
             items: [
-                { heading: 'Consulta' },
-                { text: 'Eventos', path: '/eventos', icon: 'mdi-book' },
+                { heading: 'A minha conta' },
                 { text: 'Conta', path: '/conta', icon: 'mdi-account' },
-                { divider: true }
+                { text: 'Definições', path: '/conta', icon: 'mdi-settings' },
+                { divider: true },
+                { heading: 'Desportos'},
+                { text: 'Futebol', path: '/football', icon: 'mdi-soccer' },
+                { text: 'Basquetebol', path: '/basketball', icon: 'mdi-basketball' },
+                { text: 'Formula 1', path: '/formula1', icon: 'mdi-speedometer' },
+                
             ]
         }
     },

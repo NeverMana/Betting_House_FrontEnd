@@ -1,7 +1,5 @@
 <template>
     <v-container>
-    <div class="display-1">Formula 1</div>
-    <v-divider class="my-3"></v-divider>
     <v-data-table
       :headers="fields"
       :items="events"

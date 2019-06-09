@@ -1,15 +1,17 @@
 <template>
     <v-container>
+        <Title title="Basketball"/>
         <BasketballTable :events="events"/>
     </v-container>
 </template>
 
 <script>
 import BasketballTable from '@/components/_home/BasketballTable.vue'
-
+import Title from '@/components/_public/Title.vue'
 export default {
     components:{
-        BasketballTable
+        BasketballTable,
+        Title
     },
     data () {
         return { 

@@ -4,6 +4,14 @@
 
 <script>
 export default {
+    components:{
+
+    },
+    data () {
+        return {
+
+        }
+    }
     /*
     Equipas
     Plantel

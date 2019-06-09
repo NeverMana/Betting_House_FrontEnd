@@ -1,15 +1,17 @@
 <template>
   <v-container>
+    <Title title="Formula 1"/>
     <F1Table :events="events"/>
   </v-container>
 </template>
 
 <script>
 import F1Table from '@/components/_home/F1Table.vue'
-
+import Title from '@/components/_public/Title.vue'
 export default {
     components:{
-        F1Table
+        F1Table,
+        Title
     },
     data () {
         return { 

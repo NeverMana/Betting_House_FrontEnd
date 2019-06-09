@@ -1,7 +1,6 @@
 <template>
-    <v-container>
-    <div class="display-1">Basketball</div>
-    <v-divider class="my-3"></v-divider>
+  <v-container>
+    
     <v-data-table
       :headers="fields"
       :items="events"

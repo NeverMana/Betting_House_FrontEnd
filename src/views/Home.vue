@@ -1,7 +1,10 @@
 <template>
   <v-container>
+    <Title title="Football"/>
     <FootballTable :events="footballEvents"/>
+    <Title title="Basketball"/>
     <BasketballTable :events="basketballEvents"/>
+    <Title title="Formula 1"/>
     <F1Table :events="f1Events"/>
   </v-container>
 </template>
@@ -11,12 +14,13 @@
 import FootballTable from '@/components/_home/FootballTable.vue'
 import BasketballTable from '@/components/_home/BasketballTable.vue'
 import F1Table from '@/components/_home/F1Table.vue'
-
+import Title from '@/components/_public/Title.vue'
 export default {
   components:{
     FootballTable,
     BasketballTable,
-    F1Table
+    F1Table,
+    Title
   },
   data () {
     return { 

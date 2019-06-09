@@ -11,10 +11,10 @@
 
 <script>
 
-import FootballTable from '@/components/_home/FootballTable.vue'
-import BasketballTable from '@/components/_home/BasketballTable.vue'
-import F1Table from '@/components/_home/F1Table.vue'
-import Title from '@/components/_public/Title.vue'
+import FootballTable from '@/components/tables/FootballTable.vue'
+import BasketballTable from '@/components/tables/BasketballTable.vue'
+import F1Table from '@/components/tables/F1Table.vue'
+import Title from '@/components/public/Title.vue'
 export default {
   components:{
     FootballTable,

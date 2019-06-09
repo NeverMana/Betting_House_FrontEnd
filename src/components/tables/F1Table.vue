@@ -6,7 +6,7 @@
       class="elevation-1"
     >
       <template v-slot:items="props">
-        <tr v-on:click="goTo('/event',props.item.id)">
+        <tr v-on:click="goTo('/formula1',props.item.id)">
           <td v-for="field in fields" :key="field.value">
             <v-layout justify-center class="text-truncate">
               {{ props.item[field.value] }}

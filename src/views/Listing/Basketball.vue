@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import BasketballTable from '@/components/_home/BasketballTable.vue'
-import Title from '@/components/_public/Title.vue'
+import BasketballTable from '@/components/tables/BasketballTable.vue'
+import Title from '@/components/public/Title.vue'
 export default {
     components:{
         BasketballTable,

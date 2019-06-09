@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import F1Table from '@/components/_home/F1Table.vue'
-import Title from '@/components/_public/Title.vue'
+import F1Table from '@/components/tables/F1Table.vue'
+import Title from '@/components/public/Title.vue'
 export default {
     components:{
         F1Table,

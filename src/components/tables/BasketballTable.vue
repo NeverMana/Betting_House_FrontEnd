@@ -1,12 +1,13 @@
 <template>
-    <v-container>
+  <v-container>
+    
     <v-data-table
       :headers="fields"
       :items="events"
       class="elevation-1"
     >
       <template v-slot:items="props">
-        <tr v-on:click="goTo('/event',props.item.id)">
+        <tr v-on:click="goTo('/basketball',props.item.id, props.item)">
           <td v-for="field in fields" :key="field.value">
             <v-layout justify-center class="text-truncate">
               {{ props.item[field.value] }}
@@ -35,8 +36,8 @@ export default {
     }
   },
   methods:{
-    goTo: function(path, id){
-      this.$router.push(path + '/' + id)
+    goTo: function(path, id, event){
+      this.$router.push( { path: path + '/' + id, params: { event: event }} )
     }
   }
 }

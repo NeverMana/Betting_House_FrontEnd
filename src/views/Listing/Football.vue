@@ -6,8 +6,9 @@
 </template>
 
 <script>
-import FootballTable from '@/components/_home/FootballTable.vue'
-import Title from '@/components/_public/Title.vue'
+import FootballTable from '@/components/tables/FootballTable.vue'
+import Title from '@/components/public/Title.vue'
+
 export default {
     components:{
         FootballTable,

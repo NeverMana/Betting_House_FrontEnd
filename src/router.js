@@ -3,9 +3,9 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from './components/_public/Login.vue'
 import Register from './components/_public/Register.vue'
-import Football from './views/sports/Football.vue'
-import Basketball from './views/sports/Basketball.vue'
-import Formula1 from './views/sports/Formula1.vue'
+import Football from './views/Listing/Football.vue'
+import Basketball from './views/Listing/Basketball.vue'
+import Formula1 from './views/Listing/Formula1.vue'
 
 
 Vue.use(Router)

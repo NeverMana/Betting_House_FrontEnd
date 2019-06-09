@@ -34,7 +34,7 @@ export default {
     },
   methods:{
     goTo: function(path, id){
-        this.$router.push(path + '/' + id)
+        this.$router.push({ name:'Formula 1 Profile', params: {id}})
     }
   }
 }

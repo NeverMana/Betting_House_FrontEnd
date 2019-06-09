@@ -6,7 +6,7 @@
       class="elevation-1"
     >
       <template v-slot:items="props">
-        <tr v-on:click="goTo('/football',props.item.id, props.item)">
+        <tr v-on:click="goTo('/football', props.item.id)">
           <td v-for="field in fields" :key="field.value">
             <v-layout justify-center class="text-truncate">
               {{ props.item[field.value] }}
@@ -35,8 +35,8 @@ export default {
     }
   },
   methods:{
-    goTo: function(path, id, item){
-      this.$router.push({ path: path + '/' + id, params: {event: item }})
+    goTo: function(path, id){
+      this.$router.push({ name:'Football Profile', params: {id}})
     }
   }
 }

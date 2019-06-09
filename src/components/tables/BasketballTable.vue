@@ -36,8 +36,8 @@ export default {
     }
   },
   methods:{
-    goTo: function(path, id, event){
-      this.$router.push( { path: path + '/' + id, params: { event: event }} )
+    goTo: function(path, id){
+      this.$router.push({ name:'Basketball Profile', params: {id}})
     }
   }
 }

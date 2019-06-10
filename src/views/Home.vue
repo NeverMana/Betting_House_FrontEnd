@@ -15,6 +15,7 @@ import FootballTable from '@/components/tables/FootballTable.vue'
 import BasketballTable from '@/components/tables/BasketballTable.vue'
 import F1Table from '@/components/tables/F1Table.vue'
 import Title from '@/components/public/Title.vue'
+
 export default {
   components:{
     FootballTable,
@@ -62,11 +63,10 @@ export default {
         {
           id: "A4",
           type: "Basketball",
-          homeTeam: "Golden State warriors",
+          homeTeam: "Golden State Warriors",
           homeOdd: 1.1,
           awayTeam: "Philadelphia 76ers",
-          awayOdd: 1.9,
-          tie: 1.4
+          awayOdd: 1.9
         },
         {
           id: "A5",
@@ -74,8 +74,7 @@ export default {
           homeTeam: "Los Angeles Lakers",
           homeOdd: 1.3,
           awayTeam: "Houston Rockets",
-          awayOdd: 1.7,
-          tie: 1.5
+          awayOdd: 1.7
         },
         {
           id: "A6",
@@ -116,6 +115,9 @@ export default {
     goTo: function(path, id){
       this.$router.push(path + '/' + id)
     }
+  },
+  mounted:{
+    //get list of all events
   }
 }
 </script>

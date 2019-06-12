@@ -8,11 +8,16 @@ export default {
     async post(url, parameters) {
         return await axios.post(HttpUtil.url(url), parameters, HttpUtil.headers())
             .then((response) => {
-                return response
+                return response.data
             })
             .catch((error) => {
-                const errorModel = {status: error.response.data.status, message: ApiError[error.response.data.message]};
-                this.executeOnResponseError(errorModel);
+                if (!error.response) {
+                    const errorModel = {status: 404, message: ApiError["FAILED_TO_CONNECT_TO_SERVER"]};
+                    return this.executeOnResponseError(errorModel);
+                } else {
+                    const errorModel = {status: error.response.data.status, message: ApiError[error.response.data.message]};
+                    return this.executeOnResponseError(errorModel);
+                }
             });
     },
 

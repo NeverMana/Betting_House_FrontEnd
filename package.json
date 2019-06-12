@@ -13,6 +13,7 @@
     "cxlt-vue2-toastr": "^1.1.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6",
+    "vuelidate": "^0.7.4",
     "vuetify": "^1.5.5"
   },
   "devDependencies": {

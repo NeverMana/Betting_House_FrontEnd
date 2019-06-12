@@ -7,7 +7,9 @@ import 'vuetify/dist/vuetify.min.css'
 import '@mdi/font/css/materialdesignicons.css'
 import CxltToastr from 'cxlt-vue2-toastr'
 import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
+import Vuelidate from 'vuelidate'
 
+Vue.use(Vuelidate);
 Vue.use(Vuetify, {
   iconfont: 'mdi'
 });

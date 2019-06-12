@@ -9,7 +9,7 @@ export class HttpUtil {
     static headers() {
         const headerParams = {
             'Content-Type': 'application/json;charset=utf-8',
-            'X-Origin': 'SCRUM_ACADEMICS',
+            'X-Origin': 'BETTING_HOUSE',
             Accept: 'application/json',
             Authorization: ''
         };

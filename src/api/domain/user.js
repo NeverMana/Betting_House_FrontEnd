@@ -1,8 +1,9 @@
 export default class User {
     
-    constructor (id, name, login, email) {
+    constructor (id, name, profile, login, email) {
         this._id = id;
         this._name = name;
+        this._profile = profile;
         this._login = login;
         this._email = email;
     }
@@ -13,6 +14,10 @@ export default class User {
 
     get name() {
         return this._name;
+    }
+
+    get profile() {
+        return this._profile;
     }
 
     get login() {

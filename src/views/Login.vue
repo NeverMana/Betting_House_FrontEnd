@@ -16,6 +16,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
+                            <v-btn @click="goTo('/register')" color="primary">Sign Up</v-btn>
                             <v-btn @click="signIn(login, password)" color="primary">Login</v-btn>
                         </v-card-actions>
                     </v-card>
@@ -44,14 +45,14 @@ export default {
                 .then((response) => {
                     localStorage.setItem(environment.userToken, response.token);
                     localStorage.setItem(environment.userSession, JSON.stringify(this.createUserSession(response)));
-                    this.displaySuccessMessage("Success");
+                    this.displaySuccessMessage("Login performed successfully");
                     this.goTo('home');
                 }).catch((error) => {
                     this.displayErrorMessage(error.message);
                 });
         },
         createUserSession: function (response) {
-            return new User(response.id, response.name, response.login, response.email);
+            return new User(response.id, response.name, response.profile, response.login, response.email);
         },
         displaySuccessMessage: function (message) {
             this.$toast.success({

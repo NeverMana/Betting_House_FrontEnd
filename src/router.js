@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
-import Register from './views/Register.vue'
 import Football from './views/Listing/Football.vue'
 import Basketball from './views/Listing/Basketball.vue'
 import Formula1 from './views/Listing/Formula1.vue'
@@ -10,6 +9,7 @@ import Formula1Event from './views/Query/Formula1Event.vue'
 import FootballEvent from './views/Query/FootballEvent.vue'
 import BasketballEvent from './views/Query/BasketballEvent.vue'
 import httpService from "./api/http/http-service"
+import Register from "./views/Register";
 Vue.use(Router);
 
 const ifAutheticated = (to, from, next) => {

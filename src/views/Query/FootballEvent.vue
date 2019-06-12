@@ -63,10 +63,10 @@ export default {
     },
     computed:{
         event: function(){
-            return this.events.find( p => p.id==this.id)
+            return this.events.find( p => p.id === this.id)
         }
     },
-    mounted:{
+    mounted: function () {
         //get event by eventid
     }
     

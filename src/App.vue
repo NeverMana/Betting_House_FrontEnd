@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <NavBar/>
+    <NavBar v-if="!((this.$route.name === 'Login') || this.$route.name === 'Register')" />
     <v-content>
       <router-view/>
     </v-content>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import NavBar from './views/NavBar'
+import NavBar from './components/public/NavBar'
 
 export default {
   name: 'App',
@@ -17,3 +17,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+
+  div.toast-title {
+    font-family: BlinkMacSystemFont,-apple-system,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,
+    Droid Sans,Helvetica Neue,Helvetica,Arial,sans-serif !important;
+  }
+  
+  div.toast-message {
+    font-family: BlinkMacSystemFont,-apple-system,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,
+    Droid Sans,Helvetica Neue,Helvetica,Arial,sans-serif !important;
+  }
+  
+</style>

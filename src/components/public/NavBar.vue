@@ -89,6 +89,9 @@
                 <v-btn @click="goTo('/register')" flat>
                     Register
                 </v-btn>
+                <v-btn @click="signOut()" flat>
+                    Sign Out
+                </v-btn>
             </v-toolbar-items>
         </v-toolbar>
     </nav>
@@ -114,11 +117,15 @@ export default {
         }
     },
     methods:{
-        goBack : function(){
+        goBack: function(){
             this.$router.go(-1)
         },
-        goTo : function (path) {
+        goTo: function (path) {
             this.$router.push(path)
+        },
+        signOut: function () {
+            localStorage.clear();
+            this.$router.push('/login');
         }
     }
 }

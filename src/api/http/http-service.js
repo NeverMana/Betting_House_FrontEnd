@@ -1,0 +1,56 @@
+import axios from 'axios';
+import {HttpUtil} from "./http-util";
+import {ApiError} from "../api-error";
+import {environment} from "../../environment";
+
+export default {
+
+    async post(url, parameters) {
+        return await axios.post(HttpUtil.url(url), parameters, HttpUtil.headers())
+            .then((response) => {
+                return response
+            })
+            .catch((error) => {
+                const errorModel = {status: error.response.data.status, message: ApiError[error.response.data.message]};
+                this.executeOnResponseError(errorModel);
+            });
+    },
+
+    async get(url) {
+        await axios.get(HttpUtil.url(url), HttpUtil.headers())
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                const errorModel = {status: error.response.data.status, message: ApiError[error.response.data.message]};
+                this.executeOnResponseError(errorModel);
+            });
+    },
+
+    async delete(url) {
+        await axios.delete(HttpUtil.url(url), HttpUtil.headers())
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                const errorModel = {status: error.response.data.status, message: ApiError[error.response.data.message]};
+                this.executeOnResponseError(errorModel);
+            });
+    },
+
+    executeOnResponseError(error) {
+        this.checkAutheticationValidity(error);
+        return Promise.reject(error);
+    },
+    
+    checkAutheticationValidity(error) {
+        if (error.status === 401) {
+            localStorage.clear();
+            this.$router.push('/login');
+        }
+    },
+    
+    isUserLoggedIn() {
+        return !(localStorage.getItem(environment.userToken) === null || localStorage.getItem(environment.userToken) === undefined);
+    }
+}

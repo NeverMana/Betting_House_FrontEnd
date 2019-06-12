@@ -102,13 +102,13 @@ export default {
   },
   computed: {
     footballEvents: function(){
-      return this.events.filter( p => p.type=='Football')
+      return this.events.filter( p => p.type === 'Football')
     },
     basketballEvents: function(){
-      return this.events.filter( p => p.type=='Basketball')
+      return this.events.filter( p => p.type === 'Basketball')
     },
     f1Events: function(){
-      return this.events.filter( p => p.type=='Formula1')
+      return this.events.filter( p => p.type === 'Formula1')
     },
   },
   methods:{
@@ -116,7 +116,7 @@ export default {
       this.$router.push(path + '/' + id)
     }
   },
-  mounted:{
+  mounted: function () {
     //get list of all events
   }
 }

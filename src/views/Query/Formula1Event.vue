@@ -136,17 +136,16 @@ export default {
     },
     computed:{
         event: function(){
-            return this.events.find( p => p.id==this.id)
+            return this.events.find( p => p.id === this.id)
         },
         pilotoAposta: function(selectedPilot){
             return selectedPilot.name
         }
     },
-    mounted:{
+    mounted: function () {
         //get event by eventid
         //get pilotos f1 e odds de ganhar a pista
     }
-    
 }
 </script>
 

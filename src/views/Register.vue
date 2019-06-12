@@ -39,6 +39,7 @@
                                         label="Password"
                                         :error-messages="passwordErrors"
                                         required
+                                        type="password"
                                         @input="$v.user.password.$touch()"
                                         @blur="$v.user.password.$touch()"
                                 ></v-text-field>
@@ -47,6 +48,7 @@
                                         label="Confirm Password"
                                         :error-messages="confirmPasswordErrors"
                                         required
+                                        type="password"
                                         @input="$v.user.confirmPassword.$touch()"
                                         @blur="$v.user.confirmPassword.$touch()"
                                 ></v-text-field>
@@ -55,8 +57,8 @@
                         <v-card-actions>
                             <v-btn @click="goBack" color="primary">Go Back</v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn @click="clear" color="primary">Clear</v-btn>
-                            <v-btn @click="submit" color="primary">Sign Up</v-btn>
+                            <v-btn @click.prevent="clear" color="primary">Clear</v-btn>
+                            <v-btn @click.prevent="submit" color="primary">Sign Up</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-flex>
@@ -146,13 +148,13 @@
                 this.$toast.success({
                     title: 'User',
                     message: message
-                })
+                });
             },
             displayErrorMessage: function (message) {
                 this.$toast.error({
                     title: 'User',
                     message: message
-                })
+                });
             },
             goTo: function (path) {
                 this.$router.push(path);

@@ -9,10 +9,13 @@ import CxltToastr from 'cxlt-vue2-toastr'
 import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
 import Vuelidate from 'vuelidate'
 
+
 Vue.use(Vuelidate);
+
 Vue.use(Vuetify, {
   iconfont: 'mdi'
 });
+
 Vue.use(CxltToastr, {
   position: 'top-right',
   showDuration: 1000,

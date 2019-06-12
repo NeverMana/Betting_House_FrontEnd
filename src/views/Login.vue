@@ -10,14 +10,14 @@
                         </v-toolbar>
                         <v-card-text>
                             <v-form>
-                            <v-text-field prepend-icon="person" v-model="login" name="login" label="Login" type="text"></v-text-field>
-                            <v-text-field id="password" v-model="password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
+                                <v-text-field prepend-icon="person" v-model="login" name="login" label="Login" type="text"></v-text-field>
+                                <v-text-field id="password" v-model="password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
                             </v-form>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn @click="goTo('/register')" color="primary">Sign Up</v-btn>
-                            <v-btn @click="signIn(login, password)" color="primary">Login</v-btn>
+                            <v-btn @click.prevent="signIn(login, password)" color="primary">Login</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-flex>
@@ -45,7 +45,6 @@ export default {
                 .then((response) => {
                     localStorage.setItem(environment.userToken, response.token);
                     localStorage.setItem(environment.userSession, JSON.stringify(this.createUserSession(response)));
-                    this.displaySuccessMessage("Login performed successfully");
                     this.goTo('home');
                 }).catch((error) => {
                     this.displayErrorMessage(error.message);
@@ -58,13 +57,13 @@ export default {
             this.$toast.success({
                 title: 'Login',
                 message: message
-            })
+            });
         },
         displayErrorMessage: function (message) {
             this.$toast.error({
                 title: 'Login',
                 message: message
-            })
+            });
         },
         goTo: function (path) {
             this.$router.push(path)

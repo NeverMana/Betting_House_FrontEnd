@@ -4,5 +4,7 @@ export const ApiError = {
   "EMAIL_ALREADY_INFORMED": "Email already informed",
   "FAILED_TO_CONNECT_TO_SERVER": "Failed to connect to server",
   "COINS_MUST_BE_POSITIVE": "Coins must be positive",
-  "UNAUTHORIZED": "Unauthorized"
+  "UNAUTHORIZED": "Unauthorized",
+  "USER_ALREADY_VIP": "User Already VIP",
+  "NOT_ENOUGH_COINS": "Not enough coins"
 };

@@ -1,19 +1,20 @@
 <template>
   <v-container>
     <v-container v-for="item in sports" :key="item.id">
-      <Sport :id="item.id"/>
+      <SportPage :id="item.id"/>
     </v-container>
+    <p>{{sports}}</p>
   </v-container>
 </template>
 
 <script>
 
-import Sport from '@/views/SportsPage.vue'
+import SportPage from '@/views/SportsPage.vue'
 import httpService from '@/api/http/http-service';
 
 export default {
   components:{
-    Sport
+    SportPage
   },
   data () {
     return { 

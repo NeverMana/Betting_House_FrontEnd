@@ -25,7 +25,7 @@ export default {
     },
     computed: {
         matchingEvents: function(){
-            return this.events.filter( p => p.type === this.name)
+            return this.events.filter( p => p.sport_id === this.id)
         }
     },
     mounted: function(){

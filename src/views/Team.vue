@@ -5,7 +5,7 @@
                 <v-flex xs12 sm8 md6>
                     <v-card elevation-1>
                         <v-toolbar dark color="primary">
-                            <v-toolbar-title>Add Sport</v-toolbar-title>
+                            <v-toolbar-title>Add Team</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-card-text>

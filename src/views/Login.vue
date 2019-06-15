@@ -45,7 +45,7 @@ export default {
                 .then((response) => {
                     localStorage.setItem(environment.userToken, response.token);
                     localStorage.setItem(environment.userSession, JSON.stringify(this.createUserSession(response)));
-                    this.goTo('home');
+                    this.goTo('/');
                 }).catch((error) => {
                     this.displayErrorMessage(error.message);
                 });

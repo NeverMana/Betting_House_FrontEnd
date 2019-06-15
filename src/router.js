@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
-import Football from './views/Listing/Football.vue'
+//import Football from './views/Listing/Football.vue'
 import Basketball from './views/Listing/Basketball.vue'
 import Formula1 from './views/Listing/Formula1.vue'
 import Formula1Event from './views/Query/Formula1Event.vue'
@@ -13,6 +13,7 @@ import Register from "./views/Register";
 import BecomeVip from "./views/BecomeVip";
 import Sport from "./views/Sport";
 import Team from "./views/Team";
+import SportsPage from "./views/SportsPage.vue"
 Vue.use(Router);
 
 const ifAutheticated = (to, from, next) => {
@@ -59,10 +60,11 @@ export default new Router({
         component: Team,
     },
     {
-        path:'/football',
-        name:'Futebol',
-        component: Football,
-        beforeEnter: ifAutheticated
+        path:'/sport/:id',
+        name:'SportsPage',
+        component: SportsPage,
+        beforeEnter: ifAutheticated,
+        props: true
     },
     {
         path:'/basketball',

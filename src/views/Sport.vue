@@ -52,6 +52,7 @@
                 });
             },
             addSport: function () {
+                console.log(this.name)
                 httpService.post('sports/save', this.name)
                     .then(() => {
                         this.displaySuccessMessage('Sport registered successfully!');

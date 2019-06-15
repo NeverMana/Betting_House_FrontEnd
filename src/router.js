@@ -10,6 +10,9 @@ import FootballEvent from './views/Query/FootballEvent.vue'
 import BasketballEvent from './views/Query/BasketballEvent.vue'
 import httpService from "./api/http/http-service"
 import Register from "./views/Register";
+import BecomeVip from "./views/BecomeVip";
+import Sport from "./views/Sport";
+import Team from "./views/Team";
 Vue.use(Router);
 
 const ifAutheticated = (to, from, next) => {
@@ -39,6 +42,21 @@ export default new Router({
         path:'/register',
         name:'Register',
         component: Register,
+    },
+    {
+        path:'/become-vip',
+        name:'Become VIP',
+        component: BecomeVip,
+    },
+    {
+        path:'/sport',
+        name:'Sport',
+        component: Sport,
+    },
+    {
+        path:'/team',
+        name:'Team',
+        component: Team,
     },
     {
         path:'/football',

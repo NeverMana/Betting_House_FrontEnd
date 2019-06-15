@@ -24,22 +24,9 @@
                                class="my-3">
                     </v-divider>
 
-                    <v-list-tile v-else-if="!item.becomeVIPAction"
+                    <v-list-tile v-else
                                  :key="i"
                                  :to="item.path">
-                        <v-list-tile-action>
-                            <v-icon>{{ item.icon }}</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>
-                                {{ item.text }}
-                            </v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-
-                    <v-list-tile v-else-if="item.becomeVIPAction"
-                                 :key="i"
-                                 @click.stop="openVIPModal">
                         <v-list-tile-action>
                             <v-icon>{{ item.icon }}</v-icon>
                         </v-list-tile-action>
@@ -102,7 +89,6 @@
             </v-toolbar-items>
         </v-toolbar>
         <CoinsModal :visible="showCoinsModal" @close="showCoinsModal = false" @updateCoins="updateCoins"/>
-        <BecomeVIPModal :visible="showBecomeVIPModal" @close="showBecomeVIPModal = false" @becomeVIP="becomeVIP"/>
     </nav>
 </template>
 
@@ -112,21 +98,19 @@
     import {Profile} from "../../api/domain/profile";
     import {environment} from "../../environment";
     import CoinsModal from "./CoinsModal";
-    import BecomeVIPModal from "./BecomeVIPModal";
 
     export default {
         name: 'NavBar',
         components: {
-            BecomeVIPModal,
             CoinsModal
         },
         data() {
             return {
                 user: null,
                 showCoinsModal: false,
-                showBecomeVIPModal: false,
                 itemsSideBar: [],
                 navBarTop: [],
+                sports: [],
                 drawer: false, // this.$vuetify.breakpoint.lgAndUp,
                 adminNavBarTop: [
                     { text: 'Betting House', path: '/', icon: 'mdi-home' },
@@ -142,13 +126,6 @@
                     { text: 'Betting House', path: '/', icon: 'mdi-home' },
                     { coins: true }
                 ],
-                sports: null,
-                items: [
-                    // { heading: 'Sports'},
-                    // { text: 'Futebol', path: '/football', icon: 'mdi-soccer' },
-                    // { text: 'Basquetebol', path: '/basketball', icon: 'mdi-basketball' },
-                    // { text: 'Formula 1', path: '/formula1', icon: 'mdi-speedometer' },
-                ],
                 adminItemsSideBar: [
                     { heading: 'My account' },
                     { text: 'Account', path: '/conta', icon: 'mdi-account' },
@@ -156,8 +133,8 @@
                     { divider: true },
                     { heading: 'Operations' },
                     { text: 'Event', path: '/#', icon: 'fas fa-plus'},
-                    { text: 'Sport', path: '/#', icon: 'fas fa-plus'},
-                    { text: 'Team', path: '/#', icon: 'fas fa-plus'},
+                    { text: 'Sport', path: '/sport', icon: 'fas fa-plus'},
+                    { text: 'Team', path: '/team', icon: 'fas fa-plus'},
                     { divider: true }
                 ],
                 vipItemsSideBar: [
@@ -170,7 +147,7 @@
                     { heading: 'My account' },
                     { text: 'Account', path: '/conta', icon: 'mdi-account' },
                     { text: 'Definitions', path: '/conta', icon: 'mdi-settings' },
-                    { text: 'Become VIP', becomeVIPAction: true, icon: 'fas fa-medal' },
+                    { text: 'Become VIP', path: '/become-vip', icon: 'fas fa-medal' },
                     { divider: true }
                 ]
             }
@@ -204,17 +181,6 @@
                     message: error.message
                 })
             },
-            updateCoins: function (coins) {
-                this.user.coins = coins;
-            },
-            openVIPModal: function () {
-                this.showBecomeVIPModal = true;
-            },
-            becomeVIP: function (user) {
-                this.navBarTop = this.VIPNavBarTop;
-                this.itemsSideBar = this.vipItemsSideBar;
-                this.user = user;
-            },
             setNavBarBasedOnUserProfile: function () {
                 if (this.user.profile.name === Profile.ADMINISTRATOR) {
                     this.navBarTop = this.adminNavBarTop;
@@ -230,15 +196,24 @@
             getAllSports: function () {
                 httpService.get('sports/all')
                     .then((response) => {
-                        if (response) {
-                            response.forEach((sport) => {
-                                this.items.push({ text: sport.name, path: '/sport/' + sport.id, icon: 'mdi-soccer'});
-                            });
-                        }
+                        this.sports.push({ heading: 'Sports' });
+                        response.forEach(sport => {
+                            this.sports.push({text: sport.name, path: '/sport/' + sport.id, icon: 'mdi-soccer'})
+                        });
+                        this.sports.push({ divider: true });
+                        this.itemsSideBar.push(...this.sports)
                     })
                     .catch((error) => {
                         this.displayErrorMessage({title: 'Sport', error: error.message});
                     });
+            },
+            updateCoins: function (coins) {
+                this.user.coins = coins;
+            },
+            becomeVIP: function (user) {
+                this.navBarTop = this.VIPNavBarTop;
+                this.itemsSideBar = this.vipItemsSideBar;
+                this.user = user;
             }
         }
     }

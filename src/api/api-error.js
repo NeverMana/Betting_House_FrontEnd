@@ -5,6 +5,7 @@ export const ApiError = {
   "FAILED_TO_CONNECT_TO_SERVER": "Failed to connect to server",
   "COINS_MUST_BE_POSITIVE": "Coins must be positive",
   "UNAUTHORIZED": "Unauthorized",
-  "USER_ALREADY_VIP": "User Already VIP",
-  "NOT_ENOUGH_COINS": "Not enough coins"
+  "USER_ALREADY_VIP": "User already VIP",
+  "NOT_ENOUGH_COINS": "Not enough coins",
+  "SPORT_ALREADY_EXIST": "Sport already exist"
 };

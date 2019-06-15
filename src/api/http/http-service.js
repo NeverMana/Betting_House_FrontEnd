@@ -11,6 +11,7 @@ export default {
                 return response.data;
             })
             .catch((error) => {
+                console.log(error.response);
                 if (!error.response) {
                     const errorModel = {status: 404, message: ApiError["FAILED_TO_CONNECT_TO_SERVER"]};
                     return this.executeOnResponseError(errorModel);

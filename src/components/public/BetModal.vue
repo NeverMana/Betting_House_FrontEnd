@@ -10,6 +10,7 @@
                                  :value="odd.odd"
                         ></v-radio>
                     </v-radio-group>
+                    <v-text-field prepend-icon="fas fa-coins" v-model="coins" name="bet" label="Bet" type="number"></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -24,6 +25,7 @@
 <script>
     import httpService from "../../api/http/http-service";
     import {environment} from "../../environment";
+    import {Profile} from "../../api/domain/profile";
 
     export default {
         props: {
@@ -45,10 +47,14 @@
                 coins: null,
                 odds: [],
                 odd: null,
+                betDTO: {
+                    bet: null,
+                    odd: null,
+                    event: null
+                }
             }
         },
         mounted: function () {
-            console.log("entroooooooooou");
             this.findAllOddsByEvent();
             const user = JSON.parse(localStorage.getItem(environment.userSession));
             httpService.get('users/' + user._id)
@@ -75,7 +81,6 @@
             findAllOddsByEvent: function () {
                 httpService.get('events/find-all-odds/' + this.event.id)
                     .then((odds) => {
-                        console.log(odds);
                         this.odds = odds;
                     })
                     .catch(error => {
@@ -88,14 +93,37 @@
                     message: message
                 });
             },
-            displayErrorMessage: function (error) {
+            displayErrorMessage: function (message) {
                 this.$toast.error({
                     title: 'Bet',
-                    message: error.message
+                    message: message
                 });
             },
             bet: function () {
-                console.log(this.odd);
+                if (this.user.profile.name === Profile.ADMINISTRATOR) {
+                    this.displayErrorMessage('Can\'t bet as administrator');
+                    return null;
+                }
+                if (isNaN(Number(this.coins)) || !this.coins) {
+                    this.displayErrorMessage('Type a valid number');
+                    return null;
+                }
+                if (Number(this.coins) > this.user.coins) {
+                    this.displayErrorMessage('You don\'t have enough coins');
+                    return null;
+                }
+                this.betDTO.bet = this.coins;
+                this.betDTO.event = this.event;
+                this.betDTO.odd = this.odd;
+                httpService.post('bets/save', this.betDTO)
+                    .then(() => {
+                        this.displaySuccessMessage('Betted successfully!');
+                        this.$emit('close');
+                        this.coins = null;
+                    })
+                    .catch(error => {
+                        this.displayErrorMessage(error.message);
+                    });
             }
         }
     }

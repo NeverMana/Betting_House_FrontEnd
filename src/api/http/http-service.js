@@ -31,6 +31,7 @@ export default {
                 return response.data;
             })
             .catch((error) => {
+                console.log(error);
                 if (!error.response) {
                     const errorModel = {status: 404, message: ApiError["FAILED_TO_CONNECT_TO_SERVER"]};
                     return this.executeOnResponseError(errorModel);
@@ -65,6 +66,9 @@ export default {
 
     executeOnResponseError(error) {
         this.checkAutheticationValidity(error);
+        if (error.status === 404) {
+            error.message = ApiError["API_ENDPOINT_NOT_FOUND"];
+        }
         return Promise.reject(error);
     },
     

@@ -13,13 +13,17 @@ import Register from "./views/Register";
 import BecomeVip from "./views/BecomeVip";
 import Sport from "./views/Sport";
 import Team from "./views/Team";
+import Event from "./views/Event";
+import Sports from "./views/Listing/Sports";
+import Events from "./views/Listing/Events";
+import Teams from "./views/Listing/Teams";
 Vue.use(Router);
 
 const ifAutheticated = (to, from, next) => {
     if (httpService.isUserLoggedIn()) {
         next();
         return
-    } 
+    }
     next('/login');
 };
 
@@ -27,70 +31,90 @@ export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
-    {
-        path:'/',
-        name: 'Home',
-        component: Home,
-        beforeEnter: ifAutheticated
-    },
-    {
-        path: '/login',
-        name: 'Login',
-        component: Login
-    },
-    {
-        path:'/register',
-        name:'Register',
-        component: Register,
-    },
-    {
-        path:'/become-vip',
-        name:'Become VIP',
-        component: BecomeVip,
-    },
-    {
-        path:'/sport',
-        name:'Sport',
-        component: Sport,
-    },
-    {
-        path:'/team',
-        name:'Team',
-        component: Team,
-    },
-    {
-        path:'/football',
-        name:'Futebol',
-        component: Football,
-        beforeEnter: ifAutheticated
-    },
-    {
-        path:'/basketball',
-        name:'Basquetebol',
-        component: Basketball
-    },
-    {
-        path:'/formula1',
-        name:'Formula 1',
-        component: Formula1
-    },
-    {
-        path:'/football/:id',
-        name:'Football Profile',
-        component: FootballEvent,
-        props: true
-    },
-    {
-        path:'/basketball/:id',
-        name:'Basketball Profile',
-        component: BasketballEvent,
-        props: true
-    },
-    {
-        path:'/formula1/:id',
-        name:'Formula 1 Profile',
-        component: Formula1Event,
-        props: true
-    }
+        {
+            path:'/',
+            name: 'Home',
+            component: Home,
+            beforeEnter: ifAutheticated
+        },
+        {
+            path: '/login',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path:'/register',
+            name:'Register',
+            component: Register,
+        },
+        {
+            path:'/become-vip',
+            name:'Become VIP',
+            component: BecomeVip,
+        },
+        {
+            path:'/sport',
+            name:'Sport',
+            component: Sport,
+        },
+        {
+            path:'/team',
+            name:'Team',
+            component: Team,
+        },
+        {
+            path:'/event',
+            name:'Event',
+            component: Event,
+        },
+        {
+            path:'/sports',
+            name:'Sports',
+            component: Sports,
+        },
+        {
+            path:'/teams',
+            name:'Teams',
+            component: Teams,
+        },
+        {
+            path:'/events',
+            name:'Events',
+            component: Events,
+        },
+        {
+            path:'/football',
+            name:'Futebol',
+            component: Football,
+            beforeEnter: ifAutheticated
+        },
+        {
+            path:'/basketball',
+            name:'Basquetebol',
+            component: Basketball
+        },
+        {
+            path:'/formula1',
+            name:'Formula 1',
+            component: Formula1
+        },
+        {
+            path:'/football/:id',
+            name:'Football Profile',
+            component: FootballEvent,
+            props: true
+        },
+        {
+            path:'/basketball/:id',
+            name:'Basketball Profile',
+            component: BasketballEvent,
+            props: true
+        },
+        {
+            path:'/formula1/:id',
+            name:'Formula 1 Profile',
+            component: Formula1Event,
+            props: true
+        }
     ]
 })

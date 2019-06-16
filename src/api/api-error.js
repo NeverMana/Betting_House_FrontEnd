@@ -7,5 +7,7 @@ export const ApiError = {
   "UNAUTHORIZED": "Unauthorized",
   "USER_ALREADY_VIP": "User already VIP",
   "NOT_ENOUGH_COINS": "Not enough coins",
-  "SPORT_ALREADY_EXIST": "Sport already exist"
+  "SPORT_ALREADY_EXIST": "Sport already exist",
+  "API_ENDPOINT_NOT_FOUND": "API Endpoint not found"
+
 };

@@ -114,7 +114,7 @@
                 drawer: false, // this.$vuetify.breakpoint.lgAndUp,
                 adminNavBarTop: [
                     { text: 'Betting House', path: '/', icon: 'mdi-home' },
-                    { text: 'Event', path: '/', icon: 'fas fa-calendar-plus' },
+                    { text: 'Events', path: '/', icon: 'fas fa-list' },
                     // { text: 'Sport', path: '/sport', icon: 'mdi-soccer' },
                     // { text: 'Team', path: '/sport', icon: 'fas fa-users' }
                 ],
@@ -132,9 +132,9 @@
                     { text: 'Definitions', path: '/conta', icon: 'mdi-settings' },
                     { divider: true },
                     { heading: 'Operations' },
-                    { text: 'Event', path: '/#', icon: 'fas fa-plus'},
-                    { text: 'Sport', path: '/sport', icon: 'fas fa-plus'},
-                    { text: 'Team', path: '/team', icon: 'fas fa-plus'},
+                    { text: 'Event', path: '/event', icon: 'fas fa-list'},
+                    { text: 'Sport', path: '/sport', icon: 'fas fa-list'},
+                    { text: 'Team', path: '/team', icon: 'fas fa-list'},
                     { divider: true }
                 ],
                 vipItemsSideBar: [

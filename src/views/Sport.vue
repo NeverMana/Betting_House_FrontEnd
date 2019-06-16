@@ -9,7 +9,16 @@
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-card-text>
-                            <v-text-field prepend-icon="mdi-soccer" v-model="name" name="name" label="Name" type="text"></v-text-field>
+                            <v-text-field prepend-icon="mdi-soccer" 
+                                          v-model="name"
+                                          name="name"
+                                          label="Name"
+                                          type="text"
+                                          required
+                                          :error-messages="nameErrors"
+                                          @input="$v.name.$touch()"
+                                          @blur="$v.name.$touch()">
+                            </v-text-field>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -25,11 +34,30 @@
 
 <script>
     import httpService from "../api/http/http-service";
+    import { required } from 'vuelidate/lib/validators'
+    import {validationMixin} from "vuelidate";
 
     export default {
+        mixins: [validationMixin],
+
+        validations: {
+            name: { required }
+        },
+        
         data() {
             return {
                 name: null,
+                submitted: false
+            }
+        },
+        computed: {
+            nameErrors() {
+                const errors = [];
+                if (!this.$v.name.$dirty) return errors;
+                if (this.submitted) {
+                    !this.$v.name.required && errors.push('Name is required.');
+                }
+                return errors;
             }
         },
         methods: {
@@ -52,6 +80,11 @@
                 });
             },
             addSport: function () {
+                this.submitted = true;
+                this.$v.$touch();
+                if (this.$v.$invalid) {
+                    return null;
+                }
                 httpService.post('sports/save', this.name)
                     .then(() => {
                         this.displaySuccessMessage('Sport registered successfully!');

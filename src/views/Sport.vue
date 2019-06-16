@@ -10,15 +10,18 @@
                         </v-toolbar>
                         <v-card-text>
                             <v-text-field prepend-icon="mdi-soccer" 
-                                          v-model="name"
+                                          v-model="sport.name"
                                           name="name"
                                           label="Name"
                                           type="text"
                                           required
                                           :error-messages="nameErrors"
-                                          @input="$v.name.$touch()"
-                                          @blur="$v.name.$touch()">
+                                          @input="$v.sport.name.$touch()"
+                                          @blur="$v.sport.name.$touch()">
                             </v-text-field>
+                            <v-checkbox v-model="sport.hasDraw"
+                                        label="Has Draw?"
+                            ></v-checkbox>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -41,21 +44,26 @@
         mixins: [validationMixin],
 
         validations: {
-            name: { required }
+            sport: {
+                name: { required }
+            }
         },
         
         data() {
             return {
-                name: null,
-                submitted: false
+                sport: {
+                    name: null,
+                    hasDraw: false
+                },
+                submitted: false,
             }
         },
         computed: {
             nameErrors() {
                 const errors = [];
-                if (!this.$v.name.$dirty) return errors;
+                if (!this.$v.sport.name.$dirty) return errors;
                 if (this.submitted) {
-                    !this.$v.name.required && errors.push('Name is required.');
+                    !this.$v.sport.name.required && errors.push('Name is required.');
                 }
                 return errors;
             }
@@ -85,7 +93,7 @@
                 if (this.$v.$invalid) {
                     return null;
                 }
-                httpService.post('sports/save', this.name)
+                httpService.post('sports/save', this.sport)
                     .then(() => {
                         this.displaySuccessMessage('Sport registered successfully!');
                         this.goTo('/')

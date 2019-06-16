@@ -45,10 +45,6 @@
                                       :rules="[v => !!v || 'Team is required']"
                             ></v-select>
                             <v-checkbox v-if="teams"
-                                        v-model="eventDTO.hasDraw"
-                                        label="Has Draw?"
-                            ></v-checkbox>
-                            <v-checkbox v-if="teams"
                                         v-model="eventDTO.isRestricted"
                                         label="Is Restricted?"
                             ></v-checkbox>
@@ -67,7 +63,7 @@
                    :eventDTO="eventDTO" 
                    @close="showOddsModal = false" 
                    @updateEvent="updateEvent" 
-                   :hasDraw="eventDTO.hasDraw"/>
+                   :hasDraw="hasDraw"/>
     </v-content>
 </template>
 
@@ -90,13 +86,13 @@
             return {
                 teams: null,
                 sports: [],
+                hasDraw: false,
                 selectedTeamsId: [],
                 submitted: false,
                 showOddsModal: false,
                 eventDTO: {
                     information: '',
                     isRestricted: false,
-                    hasDraw: false,
                     sport: {
                         id: null,
                         name: null
@@ -141,7 +137,7 @@
                 httpService.get('sports/all')
                     .then((response) => {
                         response.forEach(sport => {
-                            this.sports.push({id: sport.id, text: sport.name});
+                            this.sports.push({id: sport.id, text: sport.name, hasDraw: sport.hasDraw});
                         });
                         this.sports = response;
                     })
@@ -167,12 +163,15 @@
                 if (this.$v.$invalid) {
                     return null;
                 }
+                const selectedSport = this.sports.find(sport => sport.id === this.eventDTO.sport.id);
+                this.hasDraw = selectedSport.hasDraw;
+                
                 this.eventDTO.oddDTOs = [];
                 const teamsToPersist = this.teams.filter(team => this.selectedTeamsId.includes(team.id));
                 teamsToPersist.forEach(team => {
                     this.eventDTO.oddDTOs.push({odd: null, team: team});
                 });
-                if (teamsToPersist.length !== 2) {
+                if (teamsToPersist.length !== 2 && this.hasDraw) {
                     this.displayErrorMessage({title: 'Event', message: 'Two teams is required to has a draw'});
                     return null;
                 }

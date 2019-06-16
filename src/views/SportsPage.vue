@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <Title :title="name"/>
-        <SportsTable :sport="name" :events="matchingEvents"/>
+        <SportsTable :events="matchingEvents"/>
     </v-container>
 </template>
 
@@ -11,13 +11,27 @@ import SportsTable from '@/components/tables/SportsTable.vue'
 import httpService from '../api/http/http-service';
 export default {
     props:{
-        id: String
+        id: Number,
+        events: Array
     },
     data(){
         return {
-            events: null,
             name: null
         }  
+    },
+    methods: {
+        displaySuccessMessage: function (message) {
+            this.$toast.success({
+                title: 'Event',
+                message: message
+            });
+        },
+        displayErrorMessage: function (message) {
+            this.$toast.error({
+                title: 'Event',
+                message: message
+            });
+        }
     },
     components:{
         Title,
@@ -25,22 +39,14 @@ export default {
     },
     computed: {
         matchingEvents: function(){
-            return this.events.filter( p => p.sport_id === this.id)
+            return this.events.filter( event => event.sport.id === this.id);
         }
     },
     mounted: function(){
-        httpService.get('events/all').then((response) => {
-            response.forEach(event => {
-                this.events.push({event});
-            });
-            this.events = response;
-        }).catch((error) => {
-            this.displayErrorMessage({title: 'Sport', error: error.message});
-        });
         httpService.get('sports/' + this.id).then((response) => {
             this.name = response.name;
         }).catch((error) => {
-            this.displayErrorMessage({title: 'Sport', error: error.message});
+            this.displayErrorMessage(error.message);
         });
     }
 }

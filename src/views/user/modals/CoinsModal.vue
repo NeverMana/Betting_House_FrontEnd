@@ -19,8 +19,8 @@
 </template>
 
 <script>
-    import httpService from "../../api/http/http-service";
-    import {environment} from "../../environment";
+    import httpService from "../../../api/http/http-service";
+    import {environment} from "../../../environment";
 
     export default {
         props: ['visible'],
@@ -37,7 +37,7 @@
                     this.user = response;
                 })
                 .catch((error) => {
-                    this.displayErrorMessage({title: 'User', message: error.message});
+                    this.displayErrorMessage('User', error.message);
                 });
 
         },
@@ -54,32 +54,20 @@
             }
         },
         methods: {
-            displaySuccessMessage: function (message) {
-                this.$toast.success({
-                    title: 'User',
-                    message: message
-                });
-            },
-            displayErrorMessage: function (error) {
-                this.$toast.error({
-                    title: error.title,
-                    message: error.message
-                });
-            },
             addCoins: function () {
                 if (isNaN(Number(this.coins)) || !this.coins) {
-                    this.displayErrorMessage({title: 'User', message: 'Type a valid number'});
+                    this.displayErrorMessage('User', 'Type a valid number');
                 } else {
                     this.user.coins = this.coins;
                     httpService.post('users/add-coins', Number(this.coins))
                         .then((response) => {
-                            this.displaySuccessMessage("Coins added successfully!");
+                            this.displaySuccessMessage('User', 'Coins added successfully!');
                             this.$emit('updateCoins', response.coins);
                             this.$emit('close');
                             this.coins = null;
                         })
                         .catch((error) => {
-                            this.displayErrorMessage({title: 'User', message: error.message});
+                            this.displayErrorMessage('User', error.message);
                         });
                 }
             }

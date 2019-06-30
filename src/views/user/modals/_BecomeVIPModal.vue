@@ -2,24 +2,14 @@
     <v-layout row justify-center>
         <v-dialog v-model="show" persistent max-width="290">
             <v-card>
-                <v-card-title class="headline">Add Odds</v-card-title>
+                <v-card-title class="headline">Add Coins</v-card-title>
                 <v-card-text>
-                    <v-form v-if="eventDTO">
-                        <div v-if="hasDraw">
-                            <v-text-field v-model="oddForDraw" name="odd_draw" label="Odd for draw" type="number"></v-text-field>
-                        </div>
-                        <div v-for="(oddDTO, i) in eventDTO.oddDTOs" :key="i">
-                            <div v-if="oddDTO.team">
-                                <label>{{oddDTO.team.text}}</label>
-                                <v-text-field v-model="eventDTO.oddDTOs[i].odd" name="odd" label="Odd" type="number"></v-text-field>
-                            </div>
-                        </div>
-                    </v-form>
+                    Wish to become VIP? It's a 50 coins investment. You will win access to restricted events.
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="primary" flat @click.stop="show = false">Close</v-btn>
-                    <v-btn color="primary" flat @click.stop="addOdds">Add Odds</v-btn>
+                    <v-btn color="primary" flat @click.stop="becomeVIP">Become</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -27,24 +17,15 @@
 </template>
 
 <script>
-    import httpService from "../../api/http/http-service";
-    import {environment} from "../../environment";
+    import httpService from "../../../api/http/http-service";
+    import {environment} from "../../../environment";
 
     export default {
-        props: {
-            visible: {
-                type: Boolean
-            },
-            eventDTO: {
-                type: Object
-            },
-            hasDraw: {
-                type: Boolean
-            }
-        },
+        props: ['visible'],
         data() {
             return {
-                oddForDraw: null
+                user: null,
+                coins: null
             }
         },
         mounted: function () {
@@ -54,7 +35,7 @@
                     this.user = response;
                 })
                 .catch((error) => {
-                    this.displayErrorMessage({title: 'User', message: error.message});
+                    this.displayErrorMessage('User', error.message);
                 });
         },
         computed: {
@@ -70,46 +51,19 @@
             }
         },
         methods: {
-            displaySuccessMessage: function (message) {
-                this.$toast.success({
-                    title: 'Event',
-                    message: message
-                });
-            },
-            displayErrorMessage: function (error) {
-                this.$toast.error({
-                    title: error.title,
-                    message: error.message
-                });
-            },
-            addOdds: function () {
-                let isValid = true;
-                this.eventDTO.oddDTOs.forEach(oddDTO => {
-                    if (isNaN(Number(oddDTO.odd)) || !oddDTO.odd) {
-                        isValid = false;
-                    }
-                });
-                if (this.hasDraw) {
-                    if (isNaN(Number(this.oddForDraw)) || !this.oddForDraw) {
-                        isValid = false;
-                    } else {
-                        this.eventDTO.oddDTOs.push({odd: this.oddForDraw, team: null});
-                    }
-                }
-                if (!isValid) {
-                    this.displayErrorMessage({title: 'Odd', message: 'Type a valid number for the odds'});
-                    return null;
+            becomeVIP: function () {
+                if (this.user.coins < 50) {
+                    this.displayErrorMessage('User', 'You must have 50 coins!');
                 } else {
-                    console.log(this.eventDTO);
-                    httpService.post('events/save', this.eventDTO)
+                    httpService.get('users/become-vip')
                         .then((response) => {
-                            this.displaySuccessMessage("Event added successfully!");
-                            this.$emit('updateEvent', response);
+                            this.displaySuccessMessage('User', 'Now you\'re VIP!');
+                            this.$emit('becomeVIP', response);
                             this.$emit('close');
-                            this.eventDTO.oddDTOs = [];
+                            this.coins = null;
                         })
                         .catch((error) => {
-                            this.displayErrorMessage({title: 'Event', message: error.message});
+                            this.displayErrorMessage('User', error.message);
                         });
                 }
             }
@@ -162,11 +116,11 @@
             max-width: 100%;
             vertical-align: top;
             // Firefox-specific hack
-             -moz-appearance: textfield;
+            -moz-appearance: textfield;
 
             &::-webkit-inner-spin-button,
             &::-webkit-outer-spin-button {
-                 -webkit-appearance: none;
+                -webkit-appearance: none;
                 margin: 0;
             }
 
@@ -209,6 +163,7 @@
                     border: 1px solid $link-color;
                 }
             }
+
             &:active,
             &:focus {
                 & ~ .input {
@@ -216,28 +171,12 @@
                     box-shadow: 0 0 0 0.2rem $link-color;
                 }
             }
+
             &:disabled,
             &.is-disabled {
                 color: $gray-medium;
                 opacity: 1;
             }
         }
-
-        .increment-button {
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
-            right: calc(1.5 / 14 * 1rem);
-        }
-
-        .decrement-button {
-            right: calc(41.5 / 14 * 1rem);
-        }
-    }
-
-    p {
-        font-family: Impact, sans-serif;
-        font-size: 2em;
-        margin-bottom: .5em;
-        text-align: center;
     }
 </style>

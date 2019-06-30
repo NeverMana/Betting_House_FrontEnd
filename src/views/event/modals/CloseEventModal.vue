@@ -2,14 +2,19 @@
     <v-layout row justify-center>
         <v-dialog v-model="show" persistent max-width="290">
             <v-card>
-                <v-card-title class="headline">Add Coins</v-card-title>
+                <v-card-title class="headline">Set Result</v-card-title>
                 <v-card-text>
-                    Wish to become VIP? It's a 50 coins investment. You will win access to restricted events.
+                    <v-radio-group v-model="odd">
+                        <v-radio v-for="odd in odds" :key="odd.id"
+                                 :label="(odd.team ? (odd.team.name + ' | ') : 'Draw | ') + 'Odd: ' + odd.odd "
+                                 :value="odd.odd"
+                        ></v-radio>
+                    </v-radio-group>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="primary" flat @click.stop="show = false">Close</v-btn>
-                    <v-btn color="primary" flat @click.stop="becomeVIP">Become</v-btn>
+                    <v-btn color="primary" flat @click.stop="closeEvent">End Event</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -17,25 +22,41 @@
 </template>
 
 <script>
-    import httpService from "../../api/http/http-service";
-    import {environment} from "../../environment";
+
+    import {environment} from "../../../environment";
+    import httpService from "../../../api/http/http-service";
+    import {Profile} from "../../../api/domain/profile";
 
     export default {
-        props: ['visible'],
+        props: {
+            visible: {
+                type: Boolean
+            },
+            event: {
+                type: Object
+            },
+        },
         data() {
             return {
                 user: null,
-                coins: null
+                odds: [],
+                odd: null,
+                betDTO: {
+                    bet: null,
+                    odd: null,
+                    event: null
+                }
             }
         },
         mounted: function () {
+            this.findAllOddsByEvent();
             const user = JSON.parse(localStorage.getItem(environment.userSession));
             httpService.get('users/' + user._id)
                 .then((response) => {
                     this.user = response;
                 })
                 .catch((error) => {
-                    this.displayErrorMessage({title: 'User', message: error.message});
+                    this.displayErrorMessage('User', error.message);
                 });
         },
         computed: {
@@ -51,33 +72,30 @@
             }
         },
         methods: {
-            displaySuccessMessage: function (message) {
-                this.$toast.success({
-                    title: 'User',
-                    message: message
-                });
+            findAllOddsByEvent: function () {
+                httpService.get('events/find-all-odds/' + this.event.id)
+                    .then((odds) => {
+                        this.odds = odds;
+                    })
+                    .catch(error => {
+                        this.displayErrorMessage('Bet', error.message);
+                    });
             },
-            displayErrorMessage: function (error) {
-                this.$toast.error({
-                    title: error.title,
-                    message: error.message
-                });
-            },
-            becomeVIP: function () {
-                if (this.user.coins < 50) {
-                    this.displayErrorMessage({title: 'User', message: 'You must have 50 coins!'});
-                } else {
-                    httpService.get('users/become-vip')
-                        .then((response) => {
-                            this.displaySuccessMessage("Now you're VIP!");
-                            this.$emit('becomeVIP', response);
-                            this.$emit('close');
-                            this.coins = null;
-                        })
-                        .catch((error) => {
-                            this.displayErrorMessage({title: 'User', message: error.message});
-                        });
+            closeEvent: function () {
+                if (this.user.profile.name !== Profile.ADMINISTRATOR) {
+                    this.displayErrorMessage('User', 'Can\'t close event, only administrators');
+                    return null;
                 }
+                const closeEventDTO = {odd: this.odd, eventId: this.event.id};
+                httpService.post('events/close-event', closeEventDTO)
+                    .then(() => {
+                        this.$emit('eventClosed', this.event.id);
+                        this.displaySuccessMessage('Event', 'Close event successfully!');
+                        this.$emit('close');
+                    })
+                    .catch(error => {
+                        this.displayErrorMessage('Bet', error.message);
+                    });
             }
         }
     }
@@ -175,7 +193,6 @@
                     border: 1px solid $link-color;
                 }
             }
-
             &:active,
             &:focus {
                 & ~ .input {
@@ -183,12 +200,28 @@
                     box-shadow: 0 0 0 0.2rem $link-color;
                 }
             }
-
             &:disabled,
             &.is-disabled {
                 color: $gray-medium;
                 opacity: 1;
             }
         }
+
+        .increment-button {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            right: calc(1.5 / 14 * 1rem);
+        }
+
+        .decrement-button {
+            right: calc(41.5 / 14 * 1rem);
+        }
+    }
+
+    p {
+        font-family: Impact, sans-serif;
+        font-size: 2em;
+        margin-bottom: .5em;
+        text-align: center;
     }
 </style>

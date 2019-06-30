@@ -2,20 +2,24 @@
     <v-layout row justify-center>
         <v-dialog v-model="show" persistent max-width="290">
             <v-card>
-                <v-card-title class="headline">Bet</v-card-title>
+                <v-card-title class="headline">Add Odds</v-card-title>
                 <v-card-text>
-                    <v-radio-group v-model="odd">
-                        <v-radio v-for="odd in odds" :key="odd.id"
-                                 :label="(odd.team ? (odd.team.name + ': ') : 'Draw: ') +  odd.odd "
-                                 :value="odd.odd"
-                        ></v-radio>
-                    </v-radio-group>
-                    <v-text-field prepend-icon="fas fa-coins" v-model="coins" name="bet" label="Bet" type="number"></v-text-field>
+                    <v-form v-if="eventDTO">
+                        <div v-if="hasDraw">
+                            <v-text-field v-model="oddForDraw" name="odd_draw" label="Odd for draw" type="number"></v-text-field>
+                        </div>
+                        <div v-for="(oddDTO, i) in eventDTO.oddDTOs" :key="i">
+                            <div v-if="oddDTO.team">
+                                <label>{{oddDTO.team.text}}</label>
+                                <v-text-field v-model="eventDTO.oddDTOs[i].odd" name="odd" label="Odd" type="number"></v-text-field>
+                            </div>
+                        </div>
+                    </v-form>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="primary" flat @click.stop="show = false">Close</v-btn>
-                    <v-btn color="primary" flat @click.stop="bet">Bet</v-btn>
+                    <v-btn color="primary" flat @click.stop="addOdds">Add Odds</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -23,46 +27,34 @@
 </template>
 
 <script>
-    import httpService from "../../api/http/http-service";
-    import {environment} from "../../environment";
-    import {Profile} from "../../api/domain/profile";
+    import httpService from "../../../api/http/http-service";
+    import {environment} from "../../../environment";
 
     export default {
         props: {
             visible: {
                 type: Boolean
             },
-            event: {
+            eventDTO: {
                 type: Object
             },
+            hasDraw: {
+                type: Boolean
+            }
         },
-        // watch: {
-        //     event: function () {
-        //        
-        //     }
-        // },
         data() {
             return {
-                user: null,
-                coins: null,
-                odds: [],
-                odd: null,
-                betDTO: {
-                    bet: null,
-                    odd: null,
-                    event: null
-                }
+                oddForDraw: null
             }
         },
         mounted: function () {
-            this.findAllOddsByEvent();
             const user = JSON.parse(localStorage.getItem(environment.userSession));
             httpService.get('users/' + user._id)
                 .then((response) => {
                     this.user = response;
                 })
                 .catch((error) => {
-                    this.displayErrorMessage({title: 'User', message: error.message});
+                    this.displayErrorMessage('User', error.message);
                 });
         },
         computed: {
@@ -78,52 +70,35 @@
             }
         },
         methods: {
-            findAllOddsByEvent: function () {
-                httpService.get('events/find-all-odds/' + this.event.id)
-                    .then((odds) => {
-                        this.odds = odds;
-                    })
-                    .catch(error => {
-                        this.displayErrorMessage(error.message);
-                    });
-            },
-            displaySuccessMessage: function (message) {
-                this.$toast.success({
-                    title: 'Bet',
-                    message: message
+            addOdds: function () {
+                let isValid = true;
+                this.eventDTO.oddDTOs.forEach(oddDTO => {
+                    if (isNaN(Number(oddDTO.odd)) || !oddDTO.odd) {
+                        isValid = false;
+                    }
                 });
-            },
-            displayErrorMessage: function (message) {
-                this.$toast.error({
-                    title: 'Bet',
-                    message: message
-                });
-            },
-            bet: function () {
-                if (this.user.profile.name === Profile.ADMINISTRATOR) {
-                    this.displayErrorMessage('Can\'t bet as administrator');
-                    return null;
+                if (this.hasDraw) {
+                    if (isNaN(Number(this.oddForDraw)) || !this.oddForDraw) {
+                        isValid = false;
+                    } else {
+                        this.eventDTO.oddDTOs.push({odd: this.oddForDraw, team: null});
+                    }
                 }
-                if (isNaN(Number(this.coins)) || !this.coins) {
-                    this.displayErrorMessage('Type a valid number');
+                if (!isValid) {
+                    this.displayErrorMessage('Odd', 'Type a valid number for the odds');
                     return null;
+                } else {
+                    httpService.post('events/save', this.eventDTO)
+                        .then((response) => {
+                            this.displaySuccessMessage('Event', 'Event added successfully!');
+                            this.$emit('updateEvent', response);
+                            this.$emit('close');
+                            this.eventDTO.oddDTOs = [];
+                        })
+                        .catch((error) => {
+                            this.displayErrorMessage('Event',error.message);
+                        });
                 }
-                if (Number(this.coins) > this.user.coins) {
-                    this.displayErrorMessage('You don\'t have enough coins');
-                    return null;
-                }
-                this.betDTO.bet = this.coins;
-                this.betDTO.event = this.event;
-                this.betDTO.odd = this.odd;
-                httpService.post('bets/save', this.betDTO)
-                    .then(() => {
-                        this.displaySuccessMessage('Betted successfully!');
-                        this.$emit('close');
-                        this.coins = null;
-                    })
-                    .catch(error => {
-                        this.displayErrorMessage(error.message);
-                    });
             }
         }
     }

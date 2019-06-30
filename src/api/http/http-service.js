@@ -2,6 +2,7 @@ import axios from 'axios';
 import {HttpUtil} from "./http-util";
 import {ApiError} from "../api-error";
 import {environment} from "../../environment";
+import {Profile} from "../domain/profile";
 
 export default {
 
@@ -81,5 +82,10 @@ export default {
     
     isUserLoggedIn() {
         return !(localStorage.getItem(environment.userToken) === null || localStorage.getItem(environment.userToken) === undefined);
+    },
+    
+    isUserAdmin() {
+        const user = JSON.parse(localStorage.getItem(environment.userSession));
+        return user._profile.name === Profile.ADMINISTRATOR;
     }
 }

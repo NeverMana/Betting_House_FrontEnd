@@ -1,45 +1,43 @@
 <template>
-    <v-content>
-        <v-container fluid fill-height>
-            <v-layout align-center justify-center>
-                <v-flex xs12 sm8 md6>
-                    <v-card elevation-1>
-                        <v-toolbar dark color="primary">
-                            <v-toolbar-title>Add Team</v-toolbar-title>
-                            <v-spacer></v-spacer>
-                        </v-toolbar>
-                        <v-card-text>
-                            <v-select
-                                    prepend-icon="mdi-soccer"
-                                    v-model="team.sport.id"
-                                    :items="sports"
-                                    item-text="name"
-                                    item-value="id"
-                                    :rules="[v => !!v || 'Sport is required']"
-                                    label="Sport"
-                                    required
-                            ></v-select>
-                            <v-text-field prepend-icon="mdi-soccer" 
-                                          v-model="team.name"
-                                          name="name"
-                                          label="Name" 
-                                          type="text" 
-                                          required
-                                          :error-messages="nameErrors"
-                                          @input="$v.team.name.$touch()"
-                                          @blur="$v.team.name.$touch()">
-                            </v-text-field>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="primary" flat @click.stop="goBack">Go Back</v-btn>
-                            <v-btn color="primary" flat @click.stop="addTeam">Submit</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-flex>
-            </v-layout>
-        </v-container>
-    </v-content>
+    <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+            <v-flex xs12 sm8 md6>
+                <v-card elevation-1>
+                    <v-toolbar dark color="primary">
+                        <v-toolbar-title>Add Team</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-select
+                                prepend-icon="mdi-soccer"
+                                v-model="team.sport.id"
+                                :items="sports"
+                                item-text="name"
+                                item-value="id"
+                                :rules="[v => !!v || 'Sport is required']"
+                                label="Sport"
+                                required
+                        ></v-select>
+                        <v-text-field prepend-icon="mdi-soccer"
+                                      v-model="team.name"
+                                      name="name"
+                                      label="Name"
+                                      type="text"
+                                      required
+                                      :error-messages="nameErrors"
+                                      @input="$v.team.name.$touch()"
+                                      @blur="$v.team.name.$touch()">
+                        </v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" flat @click.stop="goBack">Go Back</v-btn>
+                        <v-btn color="primary" flat @click.stop="addTeam">Submit</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -55,7 +53,7 @@
                 name: { required }
             }
         },
-        
+
         data() {
             return {
                 sports: [],
@@ -90,18 +88,6 @@
             goBack: function(){
                 this.$router.go(-1)
             },
-            displaySuccessMessage: function (message) {
-                this.$toast.success({
-                    title: 'Sport',
-                    message: message
-                });
-            },
-            displayErrorMessage: function (error) {
-                this.$toast.error({
-                    title: error.title,
-                    message: error.message
-                });
-            },
             addTeam: function () {
                 this.submitted = true;
                 this.$v.$touch();
@@ -110,11 +96,11 @@
                 }
                 httpService.post('teams/', this.team)
                     .then(() => {
-                        this.displaySuccessMessage('Sport registered successfully!');
+                        this.displaySuccessMessage('Team', 'Team registered successfully!');
                         this.goTo('/')
                     })
                     .catch((error) => {
-                        this.displayErrorMessage({title: 'Sport', message: error.message});
+                        this.displayErrorMessage('Team', error.message);
                     })
             },
             getAllSports: function () {
@@ -126,7 +112,7 @@
                         this.sports = response;
                     })
                     .catch((error) => {
-                        this.displayErrorMessage({title: 'Sport', error: error.message});
+                        this.displayErrorMessage('Team', error.message);
                     });
             },
         }

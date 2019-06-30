@@ -1,25 +1,25 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Login from './views/Login.vue'
-import Football from './views/Listing/Football.vue'
-import Basketball from './views/Listing/Basketball.vue'
-import Formula1 from './views/Listing/Formula1.vue'
-import Formula1Event from './views/Query/Formula1Event.vue'
-import FootballEvent from './views/Query/FootballEvent.vue'
-import BasketballEvent from './views/Query/BasketballEvent.vue'
+import Football from './views/zOLD/Listing/Football.vue'
+import Basketball from './views/zOLD/Listing/Basketball.vue'
+import Formula1 from './views/zOLD/Listing/Formula1.vue'
+import Formula1Event from './views/zOLD/Query/Formula1Event.vue'
+import FootballEvent from './views/zOLD/Query/FootballEvent.vue'
+import BasketballEvent from './views/zOLD/Query/BasketballEvent.vue'
 import httpService from "./api/http/http-service"
-import Register from "./views/Register";
-import BecomeVip from "./views/BecomeVip";
-import Sport from "./views/Sport";
+import Sport from "./views/sport/Sport";
 import Team from "./views/Team";
-import Event from "./views/Event";
-import Sports from "./views/Listing/Sports";
-import Events from "./views/Listing/Events";
-import Teams from "./views/Listing/Teams";
+import Sports from "./views/zOLD/Listing/Sports";
+import Teams from "./views/zOLD/Listing/Teams";
+import {authRoute} from "./views/auth/auth-route";
+import {homeRoute} from "./views/home/home-route";
+import {userRoute} from "./views/user/user-route";
+import {eventRoute} from "./views/event/event-route";
+import {sportRoute} from "./views/sport/sport-route";
+
 Vue.use(Router);
 
-const ifAutheticated = (to, from, next) => {
+export const ifAutheticated = (to, from, next) => {
     if (httpService.isUserLoggedIn()) {
         next();
         return
@@ -27,94 +27,37 @@ const ifAutheticated = (to, from, next) => {
     next('/login');
 };
 
+export const ifAutheticatedAndIsAdmin = (to, from, next) => {
+    if (httpService.isUserLoggedIn()) {
+        if (httpService.isUserAdmin()) {
+            next();
+            return null;
+        } else {
+            next('/')
+        }
+    } else {
+        next('/login');
+    }
+};
+
 export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
-        {
-            path:'/',
-            name: 'Home',
-            component: Home,
-            beforeEnter: ifAutheticated
-        },
-        {
-            path: '/login',
-            name: 'Login',
-            component: Login
-        },
-        {
-            path:'/register',
-            name:'Register',
-            component: Register,
-        },
-        {
-            path:'/become-vip',
-            name:'Become VIP',
-            component: BecomeVip,
-        },
-        {
-            path:'/sport',
-            name:'Sport',
-            component: Sport,
-        },
+        ...authRoute,
+        ...homeRoute,
+        ...userRoute,
+        ...eventRoute,
+        ...sportRoute,
         {
             path:'/team',
             name:'Team',
             component: Team,
         },
         {
-            path:'/event',
-            name:'Event',
-            component: Event,
-        },
-        {
-            path:'/sports',
-            name:'Sports',
-            component: Sports,
-        },
-        {
             path:'/teams',
             name:'Teams',
             component: Teams,
-        },
-        {
-            path:'/events',
-            name:'Events',
-            component: Events,
-        },
-        {
-            path:'/football',
-            name:'Futebol',
-            component: Football,
-            beforeEnter: ifAutheticated
-        },
-        {
-            path:'/basketball',
-            name:'Basquetebol',
-            component: Basketball
-        },
-        {
-            path:'/formula1',
-            name:'Formula 1',
-            component: Formula1
-        },
-        {
-            path:'/football/:id',
-            name:'Football Profile',
-            component: FootballEvent,
-            props: true
-        },
-        {
-            path:'/basketball/:id',
-            name:'Basketball Profile',
-            component: BasketballEvent,
-            props: true
-        },
-        {
-            path:'/formula1/:id',
-            name:'Formula 1 Profile',
-            component: Formula1Event,
-            props: true
         }
     ]
 })

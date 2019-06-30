@@ -26,7 +26,24 @@ Vue.use(CxltToastr, {
 
 Vue.config.productionTip = false;
 
+Vue.mixin({
+  methods: {
+    displaySuccessMessage: function (title, message) {
+      this.$toast.success({
+        title: title,
+        message: message
+      });
+    },
+    displayErrorMessage: function (title, message) {
+      this.$toast.error({
+        title: title,
+        message: message
+      });
+    }
+  }
+});
+
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
 }).$mount('#app');

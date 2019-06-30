@@ -3,8 +3,7 @@
         <v-data-table
                 :headers="fields"
                 :items="items"
-                class="elevation-1"
-        >
+                class="elevation-1">
             <template v-slot:items="props">
                 <tr v-on:click="openBetModal(props.item)">
                     <td v-for="field in fields" :key="field.value">
@@ -16,16 +15,19 @@
             </template>
         </v-data-table>
         <div v-if="event">
-            <BetModal :event="event" :visible="showBetModal" @close="showBetModal = false"/>
+            <BetModal :event="event" :visible="showBetModal" @close="showBetModal = false" @betEvent="setEventAsBetted"/>
         </div>
     </v-container>
 </template>
 
 <script>
-    import httpService from "../../api/http/http-service";
-    import BetModal from "../public/BetModal";
+    import betService from "../../api/services/bet-service";
+    import eventService from "../../api/services/event-service";
+    import BetModal from "../../views/user/modals/BetModal";
+    import {environment} from "../../environment";
 
     export default {
+        name: 'EventsBySportTable',
         components: {BetModal},
         props: {
             events: Array
@@ -40,30 +42,44 @@
         },
         watch: {
             events: function () {
-                this.events.forEach(event => {
-                    httpService.get('events/find-all-odds/' + event.id)
-                        .then((odds) => {
-                            const teamsSize = odds.filter(odd => odd.team != null);
-                            // let itemsInfo = [];
-                            this.fields = this.fillDatatableHeader(teamsSize, odds);
-                            this.items = this.fillDatatableItems(teamsSize, odds, event);
-                        })
-                        .catch(error => {
-                            this.displayErrorMessage(error.message);
-                        });
-                });
+                this.listEvents();
             }
         },
         methods:{
-            openBetModal: function (item) {
-                this.event = item.event;
-                this.showBetModal = true;
-            },
-            displayErrorMessage: function (message) {
-                this.$toast.error({
-                    title: 'Event',
-                    message: message
+            listEvents: function () {
+                this.events.forEach(event => {
+                    eventService.getEventOdds(event)
+                        .then((odds) => {
+                            const teamsSize = odds.filter(odd => odd.team != null);
+                            betService.findBetsByEvent(event)
+                                .then(bets => {
+                                    const user = JSON.parse(localStorage.getItem(environment.userSession));
+                                    let betted = false;
+                                    bets.forEach(bet => {
+                                        if (bet.user.id === user._id) {
+                                            betted = true;
+                                        }
+                                    });
+                                    this.fields = this.fillDatatableHeader(teamsSize, odds);
+                                    this.items = this.fillDatatableItems(teamsSize, odds, event, betted);
+                                })
+                                .catch(error => {
+                                    this.displayErrorMessage('Event', error.message);
+
+                                });
+                        })
+                        .catch(error => {
+                            this.displayErrorMessage('Sport', error.message);
+                        });
                 });
+            },
+            openBetModal: function (item) {
+                if (!item.betted) {
+                    this.event = item.event;
+                    this.showBetModal = true;
+                } else {
+                    this.displayErrorMessage('Event', 'Already betted!');
+                }
             },
             goTo: function(path, id){
                 this.$router.push({ name: 'Events Profile', params: {id}})
@@ -83,9 +99,10 @@
                     header.push({text: 'Event', value: 'information'});
                     // header.push({text: 'Close', sortable: false, value: 'close'});
                 }
+                header.push({text: 'Status', value: 'status'});
                 return header;
             },
-            fillDatatableItems: function (teamsSize, odds, event) {
+            fillDatatableItems: function (teamsSize, odds, event, betted) {
                 const itemsInfo = [];
                 if (teamsSize.length === 2) {
                     if (odds.length === 3) {
@@ -95,7 +112,9 @@
                             oddDraw: odds[0].team ? (odds[1].team ? odds[2].odd : odds[1].odd) : odds[0].odd,
                             oddAway: odds[2].team ? odds[2].odd : odds[1].odd,
                             awayTeam: odds[2].team ? odds[2].team.name : odds[1].team.name,
-                            event: event
+                            event: event,
+                            betted: betted,
+                            status: betted ? 'Apostado' : 'Não apostado'
                         });
                     } else {
                         itemsInfo.push({
@@ -103,16 +122,25 @@
                             oddHome: odds[0].odd,
                             oddAway: odds[1].odd,
                             awayTeam: odds[1].team.name,
-                            event: event
+                            event: event,
+                            betted: betted,
+                            status: betted ? 'Apostado' : 'Não apostado'
                         });
                     }
                 } else {
                     this.events.forEach(event => {
-                        itemsInfo.push({information: event.information});
+                        itemsInfo.push({information: event.information, status: betted ? 'Apostado' : 'Não apostado'});
                     });
                 }
                 return itemsInfo;
             },
+            setEventAsBetted: function (eventId) {
+                const itemIndex = _.findIndex(this.items, (item) => {
+                    return item.event.id === eventId;
+                });
+                this.items[itemIndex].betted = true;
+                this.items[itemIndex].status = 'Apostado';
+            }
         }
     }
 </script>

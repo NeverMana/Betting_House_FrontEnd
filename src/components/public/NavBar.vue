@@ -67,7 +67,7 @@
                         <v-btn v-if="menu.coins" @click.stop="showCoinsModal = true" flat :key="i">
                             <v-icon dark left>fas fa-plus</v-icon>
                             <v-icon dark left>fas fa-coins</v-icon>
-                            Coins: {{user.coins}}
+                            Coins: {{user.coins.toFixed(2)}}
                         </v-btn>
                     </template>
                 </span>
@@ -77,7 +77,7 @@
 
             <v-toolbar-items>
                 <v-icon dark left>mdi-account</v-icon>
-                <!--<v-btn @click="goTo('/login')" flat>-->
+                <!--<v-btn @click="goTo('/auth')" flat>-->
                 <!--Login-->
                 <!--</v-btn>-->
                 <!--<v-btn @click="goTo('/register')" flat>-->
@@ -93,11 +93,11 @@
 </template>
 
 <script>
-    import httpService from '../../api/http/http-service'
-
+    import userService from '../../api/services/user-service'
+    import sportService from '../../api/services/sport-service'
     import {Profile} from "../../api/domain/profile";
     import {environment} from "../../environment";
-    import CoinsModal from "./CoinsModal";
+    import CoinsModal from "../../views/user/modals/CoinsModal";
 
     export default {
         name: 'NavBar',
@@ -127,26 +127,20 @@
                     { coins: true }
                 ],
                 adminItemsSideBar: [
-                    { heading: 'My account' },
-                    { text: 'Account', path: '/conta', icon: 'mdi-account' },
-                    { text: 'Definitions', path: '/conta', icon: 'mdi-settings' },
-                    { divider: true },
                     { heading: 'Operations' },
-                    { text: 'Event', path: '/event', icon: 'fas fa-list'},
-                    { text: 'Sport', path: '/sport', icon: 'fas fa-list'},
-                    { text: 'Team', path: '/team', icon: 'fas fa-list'},
+                    { text: 'Event', path: '/event', icon: 'fas fa-plus'},
+                    { text: 'Sport', path: '/sport', icon: 'fas fa-plus'},
+                    { text: 'Team', path: '/team', icon: 'fas fa-plus'},
                     { divider: true }
                 ],
                 vipItemsSideBar: [
                     { heading: 'My account' },
-                    { text: 'Account', path: '/conta', icon: 'mdi-account' },
-                    { text: 'Definitions', path: '/conta', icon: 'mdi-settings' },
+                    { text: 'Bet History', path: '/history', icon: 'mdi-format-list-bulleted' },
                     { divider: true }
                 ],
                 regularItemsSideBar: [
                     { heading: 'My account' },
-                    { text: 'Account', path: '/conta', icon: 'mdi-account' },
-                    { text: 'Definitions', path: '/conta', icon: 'mdi-settings' },
+                    { text: 'Bet History', path: '/history', icon: 'mdi-format-list-bulleted' },
                     { text: 'Become VIP', path: '/become-vip', icon: 'fas fa-medal' },
                     { divider: true }
                 ]
@@ -154,14 +148,14 @@
         },
         mounted: function () {
             const user = JSON.parse(localStorage.getItem(environment.userSession));
-            httpService.get('users/' + user._id)
+            userService.getUserById(user._id)
                 .then((response) => {
                     this.user = response;
                     this.setNavBarBasedOnUserProfile();
                     this.getAllSports();
                 })
                 .catch((error) => {
-                    this.displayErrorMessage({title: 'User', message: error.message});
+                    this.displayErrorMessage('User', error.message);
                 });
         },
         methods:{
@@ -174,12 +168,6 @@
             signOut: function () {
                 localStorage.clear();
                 this.$router.push('/login');
-            },
-            displayErrorMessage: function (error) {
-                this.$toast.error({
-                    title: error.title,
-                    message: error.message
-                })
             },
             setNavBarBasedOnUserProfile: function () {
                 if (this.user.profile.name === Profile.ADMINISTRATOR) {
@@ -194,7 +182,7 @@
                 }
             },
             getAllSports: function () {
-                httpService.get('sports/all')
+                sportService.getAllSports()
                     .then((response) => {
                         this.sports.push({ heading: 'Sports' });
                         response.forEach(sport => {
@@ -204,7 +192,7 @@
                         this.itemsSideBar.push(...this.sports)
                     })
                     .catch((error) => {
-                        this.displayErrorMessage({title: 'Sport', error: error.message});
+                        this.displayErrorMessage('Sport',error.message);
                     });
             },
             updateCoins: function (coins) {

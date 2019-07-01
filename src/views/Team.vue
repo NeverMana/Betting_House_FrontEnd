@@ -1,5 +1,6 @@
 <template>
     <v-container fluid fill-height>
+        <NavBar></NavBar>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md6>
                 <v-card elevation-1>
@@ -44,8 +45,11 @@
     import httpService from "../api/http/http-service";
     import { required } from 'vuelidate/lib/validators'
     import {validationMixin} from "vuelidate";
+    import NavBar from "../components/public/NavBar";
+    import {environment} from "../environment";
 
     export default {
+        components: {NavBar},
         mixins: [validationMixin],
 
         validations: {
@@ -94,10 +98,15 @@
                 if (this.$v.$invalid) {
                     return null;
                 }
-                httpService.post('teams/', this.team)
+                httpService.post('teams/save', this.team)
                     .then(() => {
                         this.displaySuccessMessage('Team', 'Team registered successfully!');
-                        this.goTo('/')
+                        const user = JSON.parse(localStorage.getItem(environment.userSession));
+                        if (user._profile.name === 'ADMINISTRATOR') {
+                            this.goTo('/admin');
+                        } else {
+                            this.goTo('/');
+                        }
                     })
                     .catch((error) => {
                         this.displayErrorMessage('Team', error.message);

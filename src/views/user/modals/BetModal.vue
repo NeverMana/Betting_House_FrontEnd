@@ -48,7 +48,8 @@
                 betDTO: {
                     bet: null,
                     odd: null,
-                    event: null
+                    event: null,
+                    team: null
                 }
             }
         },
@@ -75,14 +76,6 @@
         methods: {
             renderBetModal: function () {
                 this.findAllOddsByEvent();
-                const user = JSON.parse(localStorage.getItem(environment.userSession));
-                userService.getUserById(user._id)
-                    .then((response) => {
-                        this.user = response;
-                    })
-                    .catch((error) => {
-                        this.displayErrorMessage('User', error.message);
-                    });
             },
             findAllOddsByEvent: function () {
                 eventService.getEventOdds(this.event)
@@ -94,35 +87,49 @@
                     });
             },
             bet: function () {
-                if (this.odd == null) {
-                    this.displayErrorMessage('Odd', 'Select an Odd');
-                    return null;
-                }
-                if (this.user.profile.name === Profile.ADMINISTRATOR) {
-                    this.displayErrorMessage('User', 'Can\'t bet as administrator');
-                    return null;
-                }
-                if (isNaN(Number(this.coins)) || !this.coins) {
-                    this.displayErrorMessage('Coins', 'Type a valid number');
-                    return null;
-                }
-                if (Number(this.coins) > this.user.coins) {
-                    this.displayErrorMessage('User', 'You don\'t have enough coins');
-                    return null;
-                }
-                this.coins = Number(this.coins);
-                this.betDTO.bet = this.coins;
-                this.betDTO.event = this.event;
-                this.betDTO.odd = this.odd;
-                betService.saveBet(this.betDTO)
-                    .then(() => {
-                        this.$emit('betEvent', {eventId: this.event.id, betValue: this.coins});
-                        this.displaySuccessMessage('Bet', 'Betted successfully!');
-                        this.$emit('close');
-                        this.coins = null;
+                const thatOdds = this.odds;
+                const user = JSON.parse(localStorage.getItem(environment.userSession));
+                userService.getUserById(user._id)
+                    .then((response) => {
+                        this.user = response;
+
+                        if (this.odd == null) {
+                            this.displayErrorMessage('Odd', 'Select an Odd');
+                            return null;
+                        }
+                        if (this.user.profile.name === Profile.ADMINISTRATOR) {
+                            this.displayErrorMessage('User', 'Can\'t bet as administrator');
+                            return null;
+                        }
+                        if (isNaN(Number(this.coins)) || !this.coins) {
+                            this.displayErrorMessage('Coins', 'Type a valid number');
+                            return null;
+                        }
+                        if (Number(this.coins) > this.user.coins) {
+                            this.displayErrorMessage('User', 'You don\'t have enough coins');
+                            return null;
+                        }
+                        this.coins = Number(this.coins);
+                        this.betDTO.bet = this.coins;
+                        this.betDTO.event = this.event;
+                        this.betDTO.odd = this.odd;
+                        console.log(thatOdds);
+                        const oddBetted = thatOdds.find(oddOnArray => oddOnArray.odd === this.odd);
+                        this.betDTO.team = oddBetted.team;
+
+                        betService.saveBet(this.betDTO)
+                            .then(() => {
+                                this.$emit('betEvent', {eventId: this.event.id, betValue: this.coins});
+                                this.displaySuccessMessage('Bet', 'Betted successfully!');
+                                this.$emit('close');
+                                this.coins = null;
+                            })
+                            .catch(error => {
+                                this.displayErrorMessage('Bet', error.message);
+                            });
                     })
-                    .catch(error => {
-                        this.displayErrorMessage('Bet', error.message);
+                    .catch((error) => {
+                        this.displayErrorMessage('User', error.message);
                     });
             }
         }

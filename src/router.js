@@ -1,21 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Football from './views/zOLD/Listing/Football.vue'
-import Basketball from './views/zOLD/Listing/Basketball.vue'
-import Formula1 from './views/zOLD/Listing/Formula1.vue'
-import Formula1Event from './views/zOLD/Query/Formula1Event.vue'
-import FootballEvent from './views/zOLD/Query/FootballEvent.vue'
-import BasketballEvent from './views/zOLD/Query/BasketballEvent.vue'
 import httpService from "./api/http/http-service"
-import Sport from "./views/sport/Sport";
 import Team from "./views/Team";
-import Sports from "./views/zOLD/Listing/Sports";
-import Teams from "./views/zOLD/Listing/Teams";
+import History from "./views/History";
 import {authRoute} from "./views/auth/auth-route";
 import {homeRoute} from "./views/home/home-route";
 import {userRoute} from "./views/user/user-route";
 import {eventRoute} from "./views/event/event-route";
 import {sportRoute} from "./views/sport/sport-route";
+import Transaction from "./views/Transaction";
 
 Vue.use(Router);
 
@@ -55,9 +48,14 @@ export default new Router({
             component: Team,
         },
         {
-            path:'/teams',
-            name:'Teams',
-            component: Teams,
+            path:'/history',
+            name:'History',
+            component: History,
+        },
+        {
+            path:'/transactions',
+            name:'Transaction',
+            component: Transaction,
         }
     ]
 })

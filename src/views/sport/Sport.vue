@@ -40,6 +40,7 @@
     import { required } from 'vuelidate/lib/validators'
     import {validationMixin} from "vuelidate";
     import NavBar from "../../components/public/NavBar";
+    import {environment} from "../../environment";
 
     export default {
         mixins: [validationMixin],
@@ -86,7 +87,12 @@
                 httpService.post('sports/save', this.sport)
                     .then(() => {
                         this.displaySuccessMessage('Sport', 'Sport registered successfully!');
-                        this.goTo('/')
+                        const user = JSON.parse(localStorage.getItem(environment.userSession));
+                        if (user._profile.name === 'ADMINISTRATOR') {
+                            this.goTo('/admin');
+                        } else {
+                            this.goTo('/');
+                        }
                     })
                     .catch((error) => {
                         this.displayErrorMessage('Sport', error.message);

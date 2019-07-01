@@ -35,7 +35,7 @@
                 .catch(error => {
                     this.displayErrorMessage('Event', error.message);
                 });
-            eventService.getAllEvents()
+            eventService.getAllOpenEvents()
                 .then((events) => {
                     this.events = events;
                     // this.openEvents = events.filter(event => event.open === true);

@@ -5,7 +5,7 @@
                 <v-card-title class="headline">Set Result</v-card-title>
                 <v-card-text>
                     <v-radio-group v-model="odd">
-                        <v-radio v-for="odd in odds" :key="odd.id"
+                        <v-radio v-for="(odd, i) in odds" :key="i"
                                  :label="(odd.team ? (odd.team.name + ' | ') : 'Draw | ') + 'Odd: ' + odd.odd "
                                  :value="odd.odd"
                         ></v-radio>

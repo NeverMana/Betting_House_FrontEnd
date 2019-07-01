@@ -11,6 +11,7 @@
     import EventsBySportTable from '@/components/tables/EventsBySportTable.vue'
     import AdminEventsBySportTable from '@/components/tables/AdminEventsBySportTable.vue'
     import sportService from '../../api/services/sport-service';
+    import {environment} from "../../environment";
 
     export default {
         name: 'EventsPage',
@@ -53,9 +54,15 @@
             }
         },
         computed: {
-            matchingEvents: function(){
+            matchingEvents: function() {
                 let events = [];
-                events = this.events.filter( event => event.sport.id === this.id);
+                const user = JSON.parse(localStorage.getItem(environment.userSession));
+                if (user._profile.name === 'REGULAR') {
+                    events = this.events.filter( event => event.sport.id === this.id);
+                    events = events.filter(event => event.isRestricted === false);
+                } else {
+                    events = this.events.filter( event => event.sport.id === this.id);
+                }
                 return events;
             },
             // matchingClosedEvents: function(){

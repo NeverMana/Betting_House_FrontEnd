@@ -8,5 +8,10 @@ export default {
     
     findBetsByEvent(event) {
         return httpService.get('bets/find-bets-by-events/' + event.id)
+    },
+    
+    getHistory() {
+        return httpService.get('bets/get-bet-history');
     }
+    
 }

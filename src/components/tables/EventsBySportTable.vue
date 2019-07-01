@@ -56,6 +56,7 @@
         },
         methods:{
             listEvents: function () {
+                this.items = [];
                 this.events.forEach(event => {
                     eventService.getEventOdds(event)
                         .then((odds) => {
@@ -70,7 +71,7 @@
                                         }
                                     });
                                     this.fields = this.fillDatatableHeader(teamsSize, odds);
-                                    this.items = this.fillDatatableItems(teamsSize, odds, event, betted);
+                                    this.items.push(...this.fillDatatableItems(teamsSize, odds, event, betted));
                                 })
                                 .catch(error => {
                                     this.displayErrorMessage('Event', error.message);

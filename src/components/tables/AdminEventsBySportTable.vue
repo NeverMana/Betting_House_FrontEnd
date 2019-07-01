@@ -77,12 +77,13 @@
                 }
             },
             listEvents: function () {
+                this.items = [];
                 this.events.forEach(event => {
                     eventService.getEventOdds(event)
                         .then((odds) => {
                             const teamsSize = odds.filter(odd => odd.team != null);
                             this.fields = this.fillDatatableHeader(teamsSize, odds);
-                            this.items = this.fillDatatableItems(teamsSize, odds, event);
+                            this.items.push(...this.fillDatatableItems(teamsSize, odds, event));
                         })
                         .catch(error => {
                             this.displayErrorMessage('Sport', error.message);

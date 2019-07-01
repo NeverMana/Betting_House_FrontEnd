@@ -60,7 +60,12 @@
                     httpService.get('users/become-vip')
                         .then(() => {
                             this.displaySuccessMessage('User', "Now you're VIP!");
-                            this.goTo('/');
+                            const user = JSON.parse(localStorage.getItem(environment.userSession));
+                            if (user._profile.name === 'ADMINISTRATOR') {
+                                this.goTo('/admin');
+                            } else {
+                                this.goTo('/');
+                            }
                             this.userCoins = this.coins;
                             this.coins = null;
                         })

@@ -1,5 +1,6 @@
 <template>
     <v-container fluid fill-height>
+        <NavBar></NavBar>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md6>
                 <v-card elevation-1>
@@ -71,9 +72,11 @@
     import { required } from 'vuelidate/lib/validators'
     import {validationMixin} from "vuelidate";
     import OddsModal from "./modals/OddsModal";
+    import NavBar from "../../components/public/NavBar";
+    import {environment} from "../../environment";
 
     export default {
-        components: {OddsModal},
+        components: {NavBar, OddsModal},
         mixins: [validationMixin],
 
         validations: {
@@ -165,7 +168,12 @@
                 this.showOddsModal = true;
             },
             updateEvent: function () {
-                this.goTo('/');
+                const user = JSON.parse(localStorage.getItem(environment.userSession));
+                if (user._profile.name === 'ADMINISTRATOR') {
+                    this.goTo('/admin');
+                } else {
+                    this.goTo('/');
+                }
             }
         }
     }

@@ -122,17 +122,17 @@
                 sports: [],
                 drawer: false, // this.$vuetify.breakpoint.lgAndUp,
                 adminNavBarTop: [
-                    { text: 'Betting House', path: '/', icon: 'mdi-home' },
+                    { text: 'Betting House', path: this.getHomePath(), icon: 'mdi-home' },
                     { text: 'Events', path: '/', icon: 'fas fa-list' },
                     // { text: 'Sport', path: '/sport', icon: 'mdi-soccer' },
                     // { text: 'Team', path: '/sport', icon: 'fas fa-users' }
                 ],
                 VIPNavBarTop: [
-                    { text: 'Betting House', path: '/', icon: 'mdi-home' },
+                    { text: 'Betting House', path: this.getHomePath(), icon: 'mdi-home' },
                     { coins: true }
                 ],
                 regularNavBarTop: [
-                    { text: 'Betting House', path: '/', icon: 'mdi-home' },
+                    { text: 'Betting House', path: this.getHomePath(), icon: 'mdi-home' },
                     { coins: true }
                 ],
                 adminItemsSideBar: [
@@ -145,11 +145,13 @@
                 vipItemsSideBar: [
                     { heading: 'My account' },
                     { text: 'Bet History', path: '/history', icon: 'mdi-format-list-bulleted' },
+                    { text: 'Transactions', path: '/transactions', icon: 'fas fa-coins' },
                     { divider: true }
                 ],
                 regularItemsSideBar: [
                     { heading: 'My account' },
                     { text: 'Bet History', path: '/history', icon: 'mdi-format-list-bulleted' },
+                    { text: 'Transactions', path: '/transactions', icon: 'fas fa-coins' },
                     { text: 'Become VIP', path: '/become-vip', icon: 'fas fa-medal' },
                     { divider: true }
                 ]
@@ -169,6 +171,14 @@
                 });
         },
         methods:{
+            getHomePath: function () {
+                const user = JSON.parse(localStorage.getItem(environment.userSession));
+                if (user._profile.name === 'ADMINISTRATOR') {
+                    return '/admin';
+                } else {
+                    return '/';
+                }
+            },
             goBack: function(){
                 this.$router.go(-1)
             },
@@ -199,7 +209,9 @@
                             this.sports.push({text: sport.name, path: '/sport/' + sport.id, icon: 'mdi-soccer'})
                         });
                         this.sports.push({ divider: true });
-                        this.itemsSideBar.push(...this.sports)
+                        if (this.user.profile.name !== Profile.ADMINISTRATOR) {
+                            this.itemsSideBar.push(...this.sports);
+                        }
                     })
                     .catch((error) => {
                         this.displayErrorMessage('Sport',error.message);

@@ -7,8 +7,13 @@
             <template v-slot:items="props">
                 <tr v-on:click="openBetModal(props.item)">
                     <td v-for="field in fields" :key="field.value">
-                        <v-layout class="text-truncate">
+                        <v-layout class="text-truncate" v-if="field.value !== 'button'">
                             {{ props.item[field.value] }}
+                        </v-layout>
+                        <v-layout class="text-truncate" v-if="field.value === 'button'">
+                            <v-btn color="primary">
+                                {{ props.item[field.value] }}
+                            </v-btn>
                         </v-layout>
                     </td>
                 </tr>
@@ -104,6 +109,7 @@
                     // header.push({text: 'Close', sortable: false, value: 'close'});
                 }
                 header.push({text: 'Status', value: 'status'});
+                header.push({text: 'Action', value: 'button'});
                 return header;
             },
             fillDatatableItems: function (teamsSize, odds, event, betted) {
@@ -118,7 +124,8 @@
                             awayTeam: odds[2].team ? odds[2].team.name : odds[1].team.name,
                             event: event,
                             betted: betted,
-                            status: betted ? 'Apostado' : 'Não apostado'
+                            status: betted ? 'Apostado' : 'Não apostado',
+                            button: 'Bet'
                         });
                     } else {
                         itemsInfo.push({
@@ -128,12 +135,21 @@
                             awayTeam: odds[1].team.name,
                             event: event,
                             betted: betted,
-                            status: betted ? 'Apostado' : 'Não apostado'
+                            status: betted ? 'Apostado' : 'Não apostado',
+                            button: 'Bet'
                         });
                     }
                 } else {
                     this.events.forEach(event => {
-                        itemsInfo.push({information: event.information, status: betted ? 'Apostado' : 'Não apostado'});
+                        itemsInfo.push(
+                            {
+                                information: event.information,
+                                status: betted ? 'Apostado' : 'Não apostado',
+                                betted: betted,
+                                event: event,
+                                button: 'Bet'
+                            }
+                        );
                     });
                 }
                 return itemsInfo;

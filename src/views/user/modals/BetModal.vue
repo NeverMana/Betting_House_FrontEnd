@@ -52,16 +52,13 @@
                 }
             }
         },
+        watch: {
+            event: function () {
+                this.renderBetModal();
+            }
+        },
         mounted: function () {
-            this.findAllOddsByEvent();
-            const user = JSON.parse(localStorage.getItem(environment.userSession));
-            userService.getUserById(user._id)
-                .then((response) => {
-                    this.user = response;
-                })
-                .catch((error) => {
-                    this.displayErrorMessage('User', error.message);
-                });
+            this.renderBetModal();
         },
         computed: {
             show: {
@@ -76,6 +73,17 @@
             }
         },
         methods: {
+            renderBetModal: function () {
+                this.findAllOddsByEvent();
+                const user = JSON.parse(localStorage.getItem(environment.userSession));
+                userService.getUserById(user._id)
+                    .then((response) => {
+                        this.user = response;
+                    })
+                    .catch((error) => {
+                        this.displayErrorMessage('User', error.message);
+                    });
+            },
             findAllOddsByEvent: function () {
                 eventService.getEventOdds(this.event)
                     .then((odds) => {

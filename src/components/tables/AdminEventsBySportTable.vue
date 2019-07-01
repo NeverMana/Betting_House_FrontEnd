@@ -7,14 +7,19 @@
         >
             <template v-slot:items="props">
                 <tr>
-                    <td v-for="field in fields" :key="field.value">
-                        <v-layout class="text-truncate" @click="openCloseEventModal(props.item)">
+                    <td v-for="field in fields" :key="field.value" @click="openCloseEventModal(props.item)">
+                        <v-layout class="text-truncate" v-if="field.value !== 'button'">
                             <span v-if="field.value !== 'status'">
                                 {{ props.item[field.value] }}
                             </span>
                             <span v-if="field.value === 'status'" style="margin-top: 0">
                                 {{props.item['event'].open ? 'Open' : 'Closed'}}
                             </span>
+                        </v-layout>
+                        <v-layout class="text-truncate" v-if="field.value === 'button'">
+                            <v-btn color="primary">
+                                {{ props.item[field.value] }}
+                            </v-btn>
                         </v-layout>
                     </td>
                 </tr>
@@ -102,6 +107,7 @@
                     header.push({text: 'Event', value: 'information'});
                     header.push({text: 'Status', sortable: false, value: 'status'});
                 }
+                header.push({text: 'Action', value: 'button'});
                 return header;
             },
             fillDatatableItems: function (teamsSize, odds, event) {
@@ -114,7 +120,8 @@
                             oddDraw: odds[0].team ? (odds[1].team ? odds[2].odd : odds[1].odd) : odds[0].odd,
                             oddAway: odds[2].team ? odds[2].odd : odds[1].odd,
                             awayTeam: odds[2].team ? odds[2].team.name : odds[1].team.name,
-                            event: event
+                            event: event,
+                            button: 'Close'
                         });
                     } else {
                         itemsInfo.push({
@@ -122,7 +129,8 @@
                             oddHome: odds[0].odd,
                             oddAway: odds[1].odd,
                             awayTeam: odds[1].team.name,
-                            event: event
+                            event: event,
+                            button: 'Close'
                         });
                     }
                 } else {
@@ -130,7 +138,8 @@
                         itemsInfo.push(
                             {
                                 information: event.information,
-                                event: event
+                                event: event,
+                                button: 'Close'
                             }
                         );
                     });

@@ -1,5 +1,6 @@
 <template>
     <v-container>
+        <NavBar></NavBar>
         <v-container v-for="item in sports" :key="item.id">
             <EventsPage :id="item.id" :events="events" :isAdmin="true"/>
         </v-container>
@@ -10,10 +11,12 @@
     import EventsPage from "../../components/public/EventsPage";
     import eventService from '../../api/services/event-service'
     import sportService from '../../api/services/sport-service';
+    import NavBar from "../../components/public/NavBar";
 
     export default {
         name: "AdminHome",
         components: {
+            NavBar,
             EventsPage
         },
         data() {

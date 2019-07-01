@@ -1,5 +1,6 @@
 <template>
     <v-container fluid fill-height>
+        <NavBar></NavBar>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md6>
                 <v-card elevation-1>
@@ -38,16 +39,18 @@
     import httpService from "../../api/http/http-service";
     import { required } from 'vuelidate/lib/validators'
     import {validationMixin} from "vuelidate";
+    import NavBar from "../../components/public/NavBar";
 
     export default {
         mixins: [validationMixin],
-
         validations: {
             sport: {
                 name: { required }
             }
         },
-
+        components: {
+            NavBar
+        },
         data() {
             return {
                 sport: {

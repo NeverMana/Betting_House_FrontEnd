@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <NavBar v-if="!((this.$route.name === 'Login') || this.$route.name === 'Register')"/>
     <v-content style="margin-bottom: 40px">
       <router-view/>
     </v-content>
@@ -8,13 +7,9 @@
 </template>
 
 <script>
-import NavBar from './components/public/NavBar'
 
 export default {
   name: 'App',
-  components: {
-    NavBar
-  }
 }
 </script>
 

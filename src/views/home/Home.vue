@@ -1,7 +1,8 @@
 <template>
   <v-container>
+    <NavBar :coins="coins"></NavBar>
     <v-container v-for="item in sports" :key="item.id">
-      <EventsPage :id="item.id" :events="events"/>
+      <EventsPage :id="item.id" :events="events" @changeCoins="changeCoins"/>
     </v-container>
   </v-container>
 </template>
@@ -11,18 +12,24 @@
   import EventsPage from "../../components/public/EventsPage";
   import eventService from '../../api/services/event-service';
   import sportService from '../../api/services/sport-service';
+  import NavBar from "../../components/public/NavBar";
 
   export default {
     components: {
-      EventsPage
+      EventsPage,
+      NavBar
     },
     data () {
       return {
         events: [],
-        sports: []
+        sports: [],
+        coins: null
       }
     },
     methods:{
+      changeCoins: function(betValue) {
+        this.coins = betValue;
+      },
       goTo: function(path, id){
         this.$router.push(path + '/' + id)
       }

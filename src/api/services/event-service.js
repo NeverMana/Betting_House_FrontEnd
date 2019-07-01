@@ -15,7 +15,7 @@ export default {
     },
     
     getEventsBySportId(id) {
-        return httpService.get('events/find-events-by-sport-id/' + id)
+        return httpService.get('events/find-open-events-by-sport-id/' + id)
     },
     
     persistEvent(event) {

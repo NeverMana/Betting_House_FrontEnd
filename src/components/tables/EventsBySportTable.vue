@@ -42,7 +42,11 @@
         },
         watch: {
             events: function () {
-                this.listEvents();
+                if (this.events.length === 0) {
+                    this.items = [];
+                } else {
+                    this.listEvents();
+                }
             }
         },
         methods:{
@@ -134,9 +138,10 @@
                 }
                 return itemsInfo;
             },
-            setEventAsBetted: function (eventId) {
+            setEventAsBetted: function (response) {
+                this.$emit('betEvent', response.betValue);
                 const itemIndex = _.findIndex(this.items, (item) => {
-                    return item.event.id === eventId;
+                    return item.event.id === response.eventId;
                 });
                 this.items[itemIndex].betted = true;
                 this.items[itemIndex].status = 'Apostado';

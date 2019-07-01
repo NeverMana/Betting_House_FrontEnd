@@ -86,6 +86,10 @@
                     });
             },
             bet: function () {
+                if (this.odd == null) {
+                    this.displayErrorMessage('Odd', 'Select an Odd');
+                    return null;
+                }
                 if (this.user.profile.name === Profile.ADMINISTRATOR) {
                     this.displayErrorMessage('User', 'Can\'t bet as administrator');
                     return null;
@@ -98,12 +102,13 @@
                     this.displayErrorMessage('User', 'You don\'t have enough coins');
                     return null;
                 }
+                this.coins = Number(this.coins);
                 this.betDTO.bet = this.coins;
                 this.betDTO.event = this.event;
                 this.betDTO.odd = this.odd;
                 betService.saveBet(this.betDTO)
                     .then(() => {
-                        this.$emit('betEvent', this.event.id);
+                        this.$emit('betEvent', {eventId: this.event.id, betValue: this.coins});
                         this.displaySuccessMessage('Bet', 'Betted successfully!');
                         this.$emit('close');
                         this.coins = null;

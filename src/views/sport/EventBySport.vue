@@ -1,5 +1,6 @@
 <template>
     <v-container>
+        <NavBar></NavBar>
         <v-container>
             <EventsPage :id="Number(id)" :events="events"/>
         </v-container>
@@ -8,6 +9,7 @@
 <script>
     import EventsPage from "../../components/public/EventsPage";
     import eventService from '../../api/services/event-service';
+    import NavBar from "../../components/public/NavBar";
 
     export default {
         name: "EventBySport",
@@ -15,6 +17,7 @@
             id: String
         },
         components: {
+            NavBar,
             EventsPage
         },
         data() {
@@ -22,15 +25,24 @@
                 events: []
             }
         },
+        watch: {
+            id: function () {
+                this.getEventsBySport();
+            }
+        },
         mounted: function () {
-            console.log(this.id);
-            eventService.getEventsBySportId(this.id)
-                .then((eventsResponse) => {
-                    this.events = eventsResponse;
-                })
-                .catch((error) => {
-                    this.displayErrorMessage('Event', error.message);
-                });
+            this.getEventsBySport();
+        },
+        methods: {
+            getEventsBySport: function () {
+                eventService.getEventsBySportId(this.id)
+                    .then((eventsResponse) => {
+                        this.events = eventsResponse;
+                    })
+                    .catch((error) => {
+                        this.displayErrorMessage('Event', error.message);
+                    });
+            }
         }
     }
 </script>

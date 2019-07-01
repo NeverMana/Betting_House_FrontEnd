@@ -1,5 +1,6 @@
 <template>
     <v-container fluid fill-height>
+        <NavBar :coins="userCoins"></NavBar>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md6>
                 <v-card elevation-1>
@@ -24,12 +25,15 @@
 <script>
     import httpService from "../../api/http/http-service";
     import {environment} from "../../environment";
+    import NavBar from "../../components/public/NavBar";
 
     export default {
+        components: {NavBar},
         data() {
             return {
                 user: null,
-                coins: null
+                coins: null,
+                userCoins: null
             }
         },
         mounted: function () {
@@ -57,6 +61,7 @@
                         .then(() => {
                             this.displaySuccessMessage('User', "Now you're VIP!");
                             this.goTo('/');
+                            this.userCoins = this.coins;
                             this.coins = null;
                         })
                         .catch((error) => {

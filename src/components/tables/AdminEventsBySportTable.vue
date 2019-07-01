@@ -127,7 +127,12 @@
                     }
                 } else {
                     this.events.forEach(event => {
-                        itemsInfo.push({information: event.information});
+                        itemsInfo.push(
+                            {
+                                information: event.information,
+                                event: event
+                            }
+                        );
                     });
                 }
                 return itemsInfo;

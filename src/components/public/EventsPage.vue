@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <Title :title="name"/>
-        <EventsBySportTable v-if="!isAdmin" :events="matchingEvents"/>
+        <EventsBySportTable v-if="!isAdmin" :events="matchingEvents" @betEvent="changeCoins"/>
         <AdminEventsBySportTable v-if="isAdmin" :events="matchingEvents"/>
     </v-container>
 </template>
@@ -31,6 +31,27 @@
             AdminEventsBySportTable,
             EventsBySportTable
         },
+        watch: {
+            id: function () {
+                this.getSportById();
+            }
+        },
+        mounted: function(){
+            this.getSportById();
+        },
+        methods: {
+            getSportById: function () {
+                sportService.getSportById(this.id)
+                    .then((response) => {
+                        this.name = response.name;
+                    }).catch((error) => {
+                    this.displayErrorMessage('Sport', error.message);
+                });
+            },
+            changeCoins: function (betValue) {
+                this.$emit('changeCoins', betValue);
+            }
+        },
         computed: {
             matchingEvents: function(){
                 let events = [];
@@ -44,14 +65,6 @@
             //     }
             //     return events;
             // }
-        },
-        mounted: function(){
-            sportService.getSportById(this.id)
-                .then((response) => {
-                    this.name = response.name;
-                }).catch((error) => {
-                this.displayErrorMessage('Sport', error.message);
-            });
         }
     }
 </script>

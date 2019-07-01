@@ -67,7 +67,7 @@
                         <v-btn v-if="menu.coins" @click.stop="showCoinsModal = true" flat :key="i">
                             <v-icon dark left>fas fa-plus</v-icon>
                             <v-icon dark left>fas fa-coins</v-icon>
-                            Coins: {{user.coins.toFixed(2)}}
+                            Coins: {{userCoins.toFixed(2)}}
                         </v-btn>
                     </template>
                 </span>
@@ -104,8 +104,17 @@
         components: {
             CoinsModal
         },
+        props: {
+            coins: Number
+        },
+        watch: {
+            coins: function () {
+                this.userCoins = this.userCoins - this.coins;
+            }
+        },
         data() {
             return {
+                userCoins: 0,
                 user: null,
                 showCoinsModal: false,
                 itemsSideBar: [],
@@ -151,6 +160,7 @@
             userService.getUserById(user._id)
                 .then((response) => {
                     this.user = response;
+                    this.userCoins = this.user.coins;
                     this.setNavBarBasedOnUserProfile();
                     this.getAllSports();
                 })
@@ -197,6 +207,7 @@
             },
             updateCoins: function (coins) {
                 this.user.coins = coins;
+                this.userCoins = coins;
             },
             becomeVIP: function (user) {
                 this.navBarTop = this.VIPNavBarTop;

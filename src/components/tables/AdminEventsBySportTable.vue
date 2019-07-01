@@ -135,15 +135,13 @@
                         });
                     }
                 } else {
-                    this.events.forEach(event => {
-                        itemsInfo.push(
-                            {
-                                information: event.information,
-                                event: event,
-                                button: 'Close'
-                            }
-                        );
-                    });
+                    itemsInfo.push(
+                        {
+                            information: event.information,
+                            event: event,
+                            button: 'Close'
+                        }
+                    );
                 }
                 return itemsInfo;
             },

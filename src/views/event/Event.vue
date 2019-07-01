@@ -45,7 +45,7 @@
                                   :rules="[v => !!v || 'Team is required']"
                         ></v-select>
                         <v-checkbox v-if="teams"
-                                    v-model="eventDTO.isRestricted"
+                                    v-model="eventDTO.restricted"
                                     label="Is Restricted?"
                                     color="blue darken-1"
                         ></v-checkbox>
@@ -94,7 +94,7 @@
                 showOddsModal: false,
                 eventDTO: {
                     information: '',
-                    isRestricted: false,
+                    restricted: false,
                     sport: {
                         id: null,
                         name: null

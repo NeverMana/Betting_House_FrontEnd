@@ -59,7 +59,7 @@
                 const user = JSON.parse(localStorage.getItem(environment.userSession));
                 if (user._profile.name === 'REGULAR') {
                     events = this.events.filter( event => event.sport.id === this.id);
-                    events = events.filter(event => event.isRestricted === false);
+                    events = events.filter(event => event.restricted === false);
                 } else {
                     events = this.events.filter( event => event.sport.id === this.id);
                 }

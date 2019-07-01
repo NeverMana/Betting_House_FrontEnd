@@ -52,13 +52,19 @@
             },
             fillDatatableHeader: function () {
                 const header = [];
+                header.push({text: 'Transaction Date', value: 'startDate'});
                 header.push({text: 'Transactions', value: 'coins'});
                 return header;
             },
             fillDatatableItems: function () {
                 const itemsInfo = [];
                 this.transactions.forEach(transaction => {
+                    const date = new Date(transaction.startDate);
+                    const day = date.getDate();
+                    const month = date.getMonth() + 1;
+                    const year = date.getFullYear();
                     itemsInfo.push({
+                        startDate: day + '/' + month + '/' + year,
                         coins: transaction.coins > 0 ? '+ ' + transaction.coins : transaction.coins
                     });
                 });

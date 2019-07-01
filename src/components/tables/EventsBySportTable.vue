@@ -141,17 +141,15 @@
                         });
                     }
                 } else {
-                    this.events.forEach(event => {
-                        itemsInfo.push(
-                            {
-                                information: event.information,
-                                status: betted ? 'Apostado' : 'Não apostado',
-                                betted: betted,
-                                event: event,
-                                button: 'Bet'
-                            }
-                        );
-                    });
+                    itemsInfo.push(
+                        {
+                            information: event.information,
+                            status: betted ? 'Apostado' : 'Não apostado',
+                            betted: betted,
+                            event: event,
+                            button: 'Bet'
+                        }
+                    );
                 }
                 return itemsInfo;
             },
